@@ -3,27 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Nexus Archive | Enterprise Resource & Project Node</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
+  <title>Vault77 | Project & Resource Node</title>
   <style>
     :root {
-      --bg-base: #06080e;
-      --surface-1: rgba(15, 23, 42, 0.65);
-      --surface-2: rgba(30, 41, 59, 0.5);
+      --bg: #06080f;
+      --card-bg: rgba(13, 20, 36, 0.78);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(99, 102, 241, 0.4);
-      --accent-cyan: #38bdf8;
-      --accent-indigo: #6366f1;
-      --accent-violet: #a855f7;
+      --border-glow-cyan: rgba(56, 189, 248, 0.35);
+      --border-glow-purple: rgba(192, 132, 252, 0.35);
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.2);
+      --purple: #c084fc;
+      --purple-glow: rgba(192, 132, 252, 0.2);
+      --emerald: #10b981;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
-      --radius-xl: 24px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
     }
 
     * {
@@ -31,46 +26,55 @@
       margin: 0;
       padding: 0;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
-      background-color: var(--bg-base);
+      background-color: var(--bg);
       color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px 16px;
-      position: relative;
+      padding: 24px 16px;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* Ambient Background Glow */
-    .ambient-glow {
+    /* Ambient Cyberpunk Glows */
+    .glow-cyan {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 650px;
-      height: 650px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
-      filter: blur(80px);
+      top: 15%;
+      left: 15%;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, var(--cyan-glow), transparent 70%);
+      filter: blur(70px);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* Header Section */
-    .top-bar {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      margin-bottom: 28px;
+    .glow-purple {
+      position: fixed;
+      bottom: 15%;
+      right: 15%;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, var(--purple-glow), transparent 70%);
+      filter: blur(70px);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .status-pill {
+    /* Top Branding & Status */
+    .top-header {
+      text-align: center;
+      margin-bottom: 22px;
+      z-index: 10;
+    }
+
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -79,417 +83,539 @@
       padding: 6px 14px;
       border-radius: 999px;
       font-size: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       color: var(--text-muted);
       letter-spacing: 0.5px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .pulse-dot {
-      width: 7px;
-      height: 7px;
-      background-color: #10b981;
+      width: 8px;
+      height: 8px;
+      background-color: var(--emerald);
       border-radius: 50%;
-      box-shadow: 0 0 10px #10b981;
-      animation: pulse 2s infinite ease-in-out;
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulseAnim 2s infinite ease-in-out;
     }
 
-    @keyframes pulse {
+    @keyframes pulseAnim {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.45; transform: scale(0.85); }
     }
 
-    .top-bar h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
+    .top-header h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* 3D Scene Container */
+    /* 3D Scene Viewport */
     .viewport-3d {
-      position: relative;
-      z-index: 10;
       width: 100%;
-      max-width: 440px;
-      height: 610px;
+      max-width: 420px;
+      height: 590px;
       perspective: 1400px;
+      z-index: 10;
+      position: relative;
     }
 
-    .card-flipper {
+    /* Flipping Box with Hardware Acceleration */
+    .flipper-core {
       width: 100%;
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .card-flipper.flipped {
+    /* Horizontal Right 180deg Flip */
+    .flipper-core.is-flipped {
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
     }
 
-    /* Card Panels */
-    .card-panel {
+    /* Front & Back Faces */
+    .panel-face {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      background: var(--surface-1);
+      background: var(--card-bg);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      padding: 24px;
+      border-radius: 22px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      padding: 22px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      overflow: hidden;
+      transform: rotateY(0deg);
+      -webkit-transform: rotateY(0deg);
     }
 
-    .panel-back {
+    .face-front {
+      border-top: 2px solid var(--cyan);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85), 0 0 25px var(--cyan-glow);
+    }
+
+    .face-back {
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+      border-top: 2px solid var(--purple);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85), 0 0 25px var(--purple-glow);
     }
 
-    /* Identity Segment */
-    .profile-node {
+    /* Profile Header */
+    .profile-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 18px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .user-meta {
+    .user-group {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .user-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
+    .avatar-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.25rem;
+      font-family: "SFMono-Regular", Consolas, monospace;
       position: relative;
     }
 
-    .avatar-dabas {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
-      color: var(--accent-cyan);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+    .avatar-v {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--cyan);
+      border: 1px solid var(--border-glow-cyan);
     }
 
-    .avatar-priyanshu {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
-      color: var(--accent-violet);
-      border: 1px solid rgba(168, 85, 247, 0.3);
+    .avatar-p {
+      background: rgba(192, 132, 252, 0.12);
+      color: var(--purple);
+      border: 1px solid var(--border-glow-purple);
     }
 
-    .name-title {
-      font-size: 1.05rem;
-      font-weight: 600;
+    .user-text h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
       letter-spacing: -0.2px;
     }
 
-    .role-badge {
+    .user-text p {
       font-size: 0.72rem;
-      color: var(--text-dim);
-      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      font-family: "SFMono-Regular", Consolas, monospace;
       margin-top: 2px;
     }
 
-    .node-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+    .node-tag {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
       color: var(--text-dim);
       padding: 4px 8px;
       background: rgba(255, 255, 255, 0.03);
-      border-radius: var(--radius-sm);
+      border-radius: 6px;
       border: 1px solid var(--border-subtle);
     }
 
-    /* Search & Filter Strip */
-    .search-box {
-      margin: 16px 0 12px;
+    /* Live Search Input */
+    .search-wrapper {
+      margin: 14px 0 10px;
       position: relative;
     }
 
-    .search-box input {
+    .search-wrapper input {
       width: 100%;
-      background: rgba(10, 15, 30, 0.6);
+      background: rgba(8, 12, 22, 0.65);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 10px 12px 10px 36px;
+      border-radius: 10px;
+      padding: 9px 12px 9px 34px;
       color: var(--text-main);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       outline: none;
       transition: all 0.2s ease;
     }
 
-    .search-box input:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+    .search-wrapper input:focus {
+      border-color: rgba(99, 102, 241, 0.45);
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.2);
     }
 
-    .search-icon {
+    .search-glyph {
       position: absolute;
-      left: 12px;
+      left: 11px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-dim);
       pointer-events: none;
     }
 
-    /* File Architecture Area */
-    .file-repository {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
+    /* Scrollable File Directory */
+    .file-stream {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-bottom: 12px;
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 4px;
     }
 
-    .file-repository::-webkit-scrollbar {
+    .file-stream::-webkit-scrollbar {
       width: 4px;
     }
 
-    .file-repository::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
+    .file-stream::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 4px;
     }
 
-    .file-row {
+    .file-link {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.045);
       padding: 10px 12px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: var(--radius-md);
+      border-radius: 10px;
       text-decoration: none;
       color: var(--text-main);
       transition: all 0.2s ease;
     }
 
-    .file-row:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.12);
-      transform: translateY(-1px);
+    .file-link:hover {
+      background: rgba(255, 255, 255, 0.065);
+      border-color: rgba(255, 255, 255, 0.14);
+      transform: translateX(3px);
     }
 
-    .file-meta-left {
+    .file-lhs {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       min-width: 0;
     }
 
-    .extension-badge {
+    .badge-ext {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.65rem;
       font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: "SFMono-Regular", Consolas, monospace;
       flex-shrink: 0;
     }
 
-    .badge-pdf { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
-    .badge-doc { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
-    .badge-zip { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
-    .badge-code { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+    .ext-pdf { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .ext-doc { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .ext-zip { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .ext-py  { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .ext-ai  { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
 
-    .file-details {
+    .file-desc-block {
       display: flex;
       flex-direction: column;
       min-width: 0;
     }
 
-    .file-title {
+    .file-heading {
       font-size: 0.82rem;
-      font-weight: 500;
+      font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .file-sub {
+    .file-subtext {
       font-size: 0.68rem;
       color: var(--text-dim);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: "SFMono-Regular", Consolas, monospace;
       margin-top: 2px;
     }
 
-    .action-indicator {
-      font-size: 0.9rem;
+    .open-arrow {
+      font-size: 0.85rem;
       color: var(--text-dim);
-      transition: transform 0.2s;
+      transition: transform 0.2s, color 0.2s;
     }
 
-    .file-row:hover .action-indicator {
+    .file-link:hover .open-arrow {
       color: var(--text-main);
-      transform: translateX(2px);
+      transform: translate(2px, -2px);
     }
 
-    /* Flip Controller Trigger */
-    .switch-node-btn {
+    /* Flip Navigation Buttons */
+    .nav-flip-btn {
       width: 100%;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-      color: var(--text-main);
-      font-size: 0.82rem;
-      font-weight: 600;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(8px);
+      transition: transform 0.15s, opacity 0.2s;
+      outline: none;
+      z-index: 5;
     }
 
-    .switch-node-btn:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    .nav-flip-btn:active {
+      transform: scale(0.97);
     }
 
-    .btn-icon {
-      font-family: 'JetBrains Mono', monospace;
+    .btn-cyan {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #04121d;
+      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
     }
 
-    /* Footer Metadata */
+    .btn-purple {
+      background: linear-gradient(135deg, #9333ea, #c084fc);
+      color: #170423;
+      box-shadow: 0 4px 18px rgba(192, 132, 252, 0.35);
+    }
+
+    /* Footer Meta */
     .system-footer {
       position: relative;
       z-index: 10;
-      margin-top: 22px;
+      margin-top: 20px;
       text-align: center;
       font-size: 0.72rem;
       color: var(--text-dim);
-      font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.3px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      letter-spacing: 0.4px;
     }
   </style>
 </head>
 <body>
 
-  <div class="ambient-glow"></div>
+  <div class="glow-cyan"></div>
+  <div class="glow-purple"></div>
 
-  <header class="top-bar">
-    <div class="status-pill">
+  <header class="top-header">
+    <div class="status-badge">
       <span class="pulse-dot"></span>
-      <span>NODE CLUSTER // ONLINE</span>
+      <span>CLUSTER NODE // ONLINE</span>
     </div>
-    <h1>Nexus Archive</h1>
+    <h1>Vault77 Portal</h1>
   </header>
 
   <main class="viewport-3d">
-    <div class="card-flipper" id="flipper">
+    <div class="flipper-core" id="mainFlipper">
 
-      <!-- ================= SIDE 1: DABAS NODE ================= -->
-      <section class="card-panel panel-front">
-        <div class="profile-node">
-          <div class="user-meta">
-            <div class="user-avatar avatar-dabas">D</div>
-            <div>
-              <div class="name-title">Dabas</div>
-              <div class="role-badge">LEAD / RESEARCH ARCHIVE</div>
+      <!-- ================= SIDE A (FRONT): VANSH DABAS ================= -->
+      <section class="panel-face face-front">
+        <div>
+          <div class="profile-meta">
+            <div class="user-group">
+              <div class="avatar-icon avatar-v">V</div>
+              <div class="user-text">
+                <h2>Vansh Dabas</h2>
+                <p>ROOT NODE // LEAD RESEARCH</p>
+              </div>
             </div>
+            <div class="node-tag">0x01A</div>
           </div>
-          <div class="node-id">0x01A</div>
+
+          <div class="search-wrapper">
+            <span class="search-glyph">⌕</span>
+            <input type="text" placeholder="Search archive files..." oninput="filterFolder(this, 'stream-vansh')" />
+          </div>
+
+          <div class="file-stream" id="stream-vansh">
+            <!-- PolScience Notes -->
+            <a href="notes.pdf" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-pdf">PDF</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">PolScience_Comprehensive.pdf</span>
+                  <span class="file-subtext">3.8 MB • Chapter 1-5 Synthesis</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- Economics Analysis -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-doc">DOC</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">MacroEcon_Analytics.docx</span>
+                  <span class="file-subtext">1.2 MB • Research Dossier</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- Pipeline Script -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-py">PY</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Model_Optimization.py</span>
+                  <span class="file-subtext">48 KB • Pipeline Script</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- Full Repository Archive -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-zip">ZIP</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Project_Source_Bundle.zip</span>
+                  <span class="file-subtext">42.1 MB • Full Core Snapshot</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+          </div>
         </div>
 
-        <div class="search-box">
-          <span class="search-icon">⌕</span>
-          <input type="text" placeholder="Search archives or extensions..." oninput="filterFiles(this, 'list-dabas')" />
-        </div>
-
-        <div class="file-repository" id="list-dabas">
-          <a href="notes.pdf" target="_blank" class="file-row">
-            <div class="file-meta-left">
-              <div class="extension-badge badge-pdf">PDF</div>
-              <div class="file-details">
-                <span class="file-title">PolScience_Comprehensive.pdf</span>
-                <span class="file-sub">3.8 MB • Chapter 1-5 Synthesis</span>
-              </div>
-            </div>
-            <span class="action-indicator">↗</span>
-          </a>
-
-          <a href="#" class="file-row">
-            <div class="file-meta-left">
-              <div class="extension-badge badge-doc">DOC</div>
-              <div class="file-details">
-                <span class="file-title">MacroEcon_Analytics.docx</span>
-                <span class="file-sub">1.2 MB • Research Dossier</span>
-              </div>
-            </div>
-            <span class="action-indicator">↗</span>
-          </a>
-
-          <a href="#" class="file-row">
-            <div class="file-meta-left">
-              <div class="extension-badge badge-code">PY</div>
-              <div class="file-details">
-                <span class="file-title">Model_Optimization.py</span>
-                <span class="file-sub">48 KB • Production Pipeline</span>
-              </div>
-            </div>
-            <span class="action-indicator">↗</span>
-          </a>
-
-          <a href="#" class="file-row">
-            <div class="file-meta-left">
-              <div class="extension-badge badge-zip">ZIP</div>
-              <div class="file-details">
-                <span class="file-title">Source_Asset_Archive.zip</span>
-                <span class="file-sub">42.1 MB • Full Repository Core</span>
-              </div>
-            </div>
-            <span class="action-indicator">↗</span>
-          </a>
-        </div>
-
-        <button class="switch-node-btn" onclick="toggleFlip()">
-          <span>Switch Node: Priyanshu</span>
-          <span class="btn-icon">⇄</span>
+        <button type="button" class="nav-flip-btn btn-cyan" onclick="performFlip(event)">
+          Switch to Priyanshu Sehrawat ➔
         </button>
       </section>
 
-      <!-- ================= SIDE 2: PRIYANSHU NODE ================= -->
-      <section class="card-panel panel-back">
-        <div class="profile-node">
-          <div class="user-meta">
-            <div class="user-avatar avatar-priyanshu">P</div>
-            <div>
-              <div class="name-title">Priyanshu Sehrawat</div>
-              <div class="role-badge">SYSTEMS / DATA PORTAL</div>
+      <!-- ================= SIDE B (BACK): PRIYANSHU SEHRAWAT ================= -->
+      <section class="panel-face face-back">
+        <div>
+          <div class="profile-meta">
+            <div class="user-group">
+              <div class="avatar-icon avatar-p">P</div>
+              <div class="user-text">
+                <h2>Priyanshu Sehrawat</h2>
+                <p>COLLABORATOR // DATA NODE</p>
+              </div>
             </div>
+            <div class="node-tag">0x02B</div>
           </div>
-          <div class="node-id">0x02B</div>
+
+          <div class="search-wrapper">
+            <span class="search-glyph">⌕</span>
+            <input type="text" placeholder="Search archive files..." oninput="filterFolder(this, 'stream-priyanshu')" />
+          </div>
+
+          <div class="file-stream" id="stream-priyanshu">
+            <!-- Humanities Field Study -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-pdf">PDF</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Humanities_CaseStudy.pdf</span>
+                  <span class="file-subtext">5.4 MB • Primary Document</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- Case Study Analysis -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-doc">DOC</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Analytical_Survey_Report.docx</span>
+                  <span class="file-subtext">890 KB • Statistical Annex</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- AI Model Specifications -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-ai">AI</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Neural_Model_Specs.json</span>
+                  <span class="file-subtext">112 KB • Config Blueprint</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+
+            <!-- Archive Snapshot -->
+            <a href="#" target="_blank" class="file-link">
+              <div class="file-lhs">
+                <div class="badge-ext ext-zip">TAR</div>
+                <div class="file-desc-block">
+                  <span class="file-heading">Archive_Sync_Backup.tar.gz</span>
+                  <span class="file-subtext">18.6 MB • Verified Archive</span>
+                </div>
+              </div>
+              <span class="open-arrow">↗</span>
+            </a>
+          </div>
         </div>
 
-        <div class="search-box">
-          <span class="search-icon">⌕</span>
-          <input type="text" placeholder="Search archives or extensions..." oninput="filterFiles(this, 'list-priyanshu')" />
-        </div>
+        <button type="button" class="nav-flip-btn btn-purple" onclick="performFlip(event)">
+          ➔ Switch back to Vansh Dabas
+        </button>
+      </section>
 
-        <div class="file-repository" id="list
+    </div>
+  </main>
+
+  <footer class="system-footer">
+    SECURE REPOSITORY ENVIRONMENT // VAULT77.IO READY
+  </footer>
+
+  <script>
+    const flipper = document.getElementById('mainFlipper');
+
+    // Reliable 3D Right Flip Action
+    function performFlip(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      flipper.classList.toggle('is-flipped');
+    }
+
+    // In-memory Realtime File Search
+    function filterFolder(inputElem, listId) {
+      const q = inputElem.value.toLowerCase().trim();
+      const folder = document.getElementById(listId);
+      const items = folder.getElementsByClassName('file-link');
+
+      for (let i = 0; i < items.length; i++) {
+        const text = items[i].textContent.toLowerCase();
+        if (text.includes(q)) {
+          items[i].style.display = 'flex';
+        } else {
+          items[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
