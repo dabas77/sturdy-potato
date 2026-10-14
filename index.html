@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nexus Archive | Enterprise Resource & Project Node</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-base: #06080e;
+      --surface-1: rgba(15, 23, 42, 0.65);
+      --surface-2: rgba(30, 41, 59, 0.5);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.4);
+      --accent-cyan: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-violet: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-xl: 24px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(56, 189, 248, 0.05) 40%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header Section */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(12px);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .top-bar h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 3D Scene Container */
+    .viewport-3d {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 440px;
+      height: 610px;
+      perspective: 1400px;
+    }
+
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* Card Panels */
+    .card-panel {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .panel-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Identity Segment */
+    .profile-node {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .user-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      position: relative;
+    }
+
+    .avatar-dabas {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .avatar-priyanshu {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
+      color: var(--accent-violet);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .name-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .role-badge {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .node-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Search & Filter Strip */
+    .search-box {
+      margin: 16px 0 12px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(10, 15, 30, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px 10px 36px;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    /* File Architecture Area */
+    .file-repository {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .file-repository::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .file-repository::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .file-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .file-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .file-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .extension-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .badge-pdf { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+    .badge-doc { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+    .badge-zip { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+    .badge-code { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+
+    .file-details {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .file-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-sub {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 2px;
+    }
+
+    .action-indicator {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      transition: transform 0.2s;
+    }
+
+    .file-row:hover .action-indicator {
+      color: var(--text-main);
+      transform: translateX(2px);
+    }
+
+    /* Flip Controller Trigger */
+    .switch-node-btn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .switch-node-btn:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-icon {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Footer Metadata */
+    .system-footer {
+      position: relative;
+      z-index: 10;
+      margin-top: 22px;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <header class="top-bar">
+    <div class="status-pill">
+      <span class="pulse-dot"></span>
+      <span>NODE CLUSTER // ONLINE</span>
+    </div>
+    <h1>Nexus Archive</h1>
+  </header>
+
+  <main class="viewport-3d">
+    <div class="card-flipper" id="flipper">
+
+      <!-- ================= SIDE 1: DABAS NODE ================= -->
+      <section class="card-panel panel-front">
+        <div class="profile-node">
+          <div class="user-meta">
+            <div class="user-avatar avatar-dabas">D</div>
+            <div>
+              <div class="name-title">Dabas</div>
+              <div class="role-badge">LEAD / RESEARCH ARCHIVE</div>
+            </div>
+          </div>
+          <div class="node-id">0x01A</div>
+        </div>
+
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" placeholder="Search archives or extensions..." oninput="filterFiles(this, 'list-dabas')" />
+        </div>
+
+        <div class="file-repository" id="list-dabas">
+          <a href="notes.pdf" target="_blank" class="file-row">
+            <div class="file-meta-left">
+              <div class="extension-badge badge-pdf">PDF</div>
+              <div class="file-details">
+                <span class="file-title">PolScience_Comprehensive.pdf</span>
+                <span class="file-sub">3.8 MB • Chapter 1-5 Synthesis</span>
+              </div>
+            </div>
+            <span class="action-indicator">↗</span>
+          </a>
+
+          <a href="#" class="file-row">
+            <div class="file-meta-left">
+              <div class="extension-badge badge-doc">DOC</div>
+              <div class="file-details">
+                <span class="file-title">MacroEcon_Analytics.docx</span>
+                <span class="file-sub">1.2 MB • Research Dossier</span>
+              </div>
+            </div>
+            <span class="action-indicator">↗</span>
+          </a>
+
+          <a href="#" class="file-row">
+            <div class="file-meta-left">
+              <div class="extension-badge badge-code">PY</div>
+              <div class="file-details">
+                <span class="file-title">Model_Optimization.py</span>
+                <span class="file-sub">48 KB • Production Pipeline</span>
+              </div>
+            </div>
+            <span class="action-indicator">↗</span>
+          </a>
+
+          <a href="#" class="file-row">
+            <div class="file-meta-left">
+              <div class="extension-badge badge-zip">ZIP</div>
+              <div class="file-details">
+                <span class="file-title">Source_Asset_Archive.zip</span>
+                <span class="file-sub">42.1 MB • Full Repository Core</span>
+              </div>
+            </div>
+            <span class="action-indicator">↗</span>
+          </a>
+        </div>
+
+        <button class="switch-node-btn" onclick="toggleFlip()">
+          <span>Switch Node: Priyanshu</span>
+          <span class="btn-icon">⇄</span>
+        </button>
+      </section>
+
+      <!-- ================= SIDE 2: PRIYANSHU NODE ================= -->
+      <section class="card-panel panel-back">
+        <div class="profile-node">
+          <div class="user-meta">
+            <div class="user-avatar avatar-priyanshu">P</div>
+            <div>
+              <div class="name-title">Priyanshu Sehrawat</div>
+              <div class="role-badge">SYSTEMS / DATA PORTAL</div>
+            </div>
+          </div>
+          <div class="node-id">0x02B</div>
+        </div>
+
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input type="text" placeholder="Search archives or extensions..." oninput="filterFiles(this, 'list-priyanshu')" />
+        </div>
+
+        <div class="file-repository" id="list
