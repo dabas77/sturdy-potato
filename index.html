@@ -57,38 +57,37 @@
       z-index: 1;
     }
 
-    /* Shooting Star Container */
+    /* Shooting Star Container (Top-Right Origin) */
     .shooting-star {
       position: fixed;
-      top: -100px;
-      left: -100px;
-      width: 120px;
+      top: 0;
+      left: 0;
+      width: 140px;
       height: 2px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(220, 185, 125, 0.6), transparent);
+      background: linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(220, 185, 125, 0.7), transparent);
       border-radius: 999px;
       opacity: 0;
       pointer-events: none;
       z-index: 2;
-      transform: rotate(-35deg);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
     }
 
     .shooting-star.animate {
-      animation: shoot 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+      animation: shootTopRight 1.25s cubic-bezier(0.2, 0.1, 0.2, 1) forwards;
     }
 
-    @keyframes shoot {
+    @keyframes shootTopRight {
       0% {
         opacity: 0;
-        transform: translate(0, 0) rotate(-35deg) scaleX(0.2);
+        transform: translate(0, 0) rotate(135deg) scaleX(0.2);
       }
       15% {
         opacity: 1;
-        transform: translate(120px, 120px) rotate(-35deg) scaleX(1);
+        transform: translate(-100px, 100px) rotate(135deg) scaleX(1);
       }
       100% {
         opacity: 0;
-        transform: translate(650px, 650px) rotate(-35deg) scaleX(0.8);
+        transform: translate(-650px, 650px) rotate(135deg) scaleX(0.8);
       }
     }
 
@@ -612,7 +611,7 @@
 
   <script>
     (function () {
-      // Audio Synthesizer (Zero External Dependencies)
+      // Audio Synthesizer
       let audioEnabled = true;
       let audioCtx = null;
 
@@ -675,11 +674,11 @@
         }
       });
 
-      // Realistic Night Starfield Canvas
+      // Realistic Night Starfield Canvas with 3-Layer Depth Parallax
       const canvas = document.getElementById('spaceCanvas');
       const ctx = canvas.getContext('2d');
       let stars = [];
-      const numStars = 180;
+      const numStars = 190;
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -690,49 +689,29 @@
       function initStars() {
         stars = [];
         for (let i = 0; i < numStars; i++) {
+          const layer = Math.random() < 0.5 ? 1 : (Math.random() < 0.85 ? 2 : 3);
           stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 1.4 + 0.3,
+            baseX: Math.random() * canvas.width,
+            baseY: Math.random() * canvas.height,
+            size: layer === 1 ? (Math.random() * 0.7 + 0.3) : (layer === 2 ? (Math.random() * 0.9 + 0.7) : (Math.random() * 1.2 + 1.1)),
             alpha: Math.random() * 0.7 + 0.3,
             speed: Math.random() * 0.02 + 0.005,
-            hue: Math.random() > 0.8 ? 'gold' : (Math.random() > 0.6 ? 'blue' : 'white')
+            layer: layer, // 1 = deep distant background, 3 = foreground
+            hue: Math.random() > 0.82 ? 'gold' : (Math.random() > 0.65 ? 'blue' : 'white')
           });
         }
       }
 
-      function renderStars() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let star of stars) {
-          star.alpha += star.speed;
-          if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
-
-          ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          if (star.hue === 'gold') {
-            ctx.fillStyle = `rgba(229, 196, 139, ${star.alpha * 0.8})`;
-          } else if (star.hue === 'blue') {
-            ctx.fillStyle = `rgba(180, 210, 255, ${star.alpha * 0.75})`;
-          } else {
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-          }
-          ctx.fill();
-        }
-        requestAnimationFrame(renderStars);
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-      renderStars();
-
-      // Shooting Star (First at 5s, then every 30s)
+      // Shooting Star (Top-Right Origin, First at 5s, then every 30s)
       const shootingStar = document.getElementById('shootingStar');
       function triggerMeteor() {
-        const startX = Math.random() * (window.innerWidth * 0.6);
-        const startY = Math.random() * (window.innerHeight * 0.4);
+        // Spawn precisely along the top-right quarter of screen
+        const startX = window.innerWidth - (Math.random() * (window.innerWidth * 0.35) + 30);
+        const startY = Math.random() * (window.innerHeight * 0.22) + 10;
         shootingStar.style.top = `${startY}px`;
         shootingStar.style.left = `${startX}px`;
         shootingStar.classList.remove('animate');
-        void shootingStar.offsetWidth; // re-trigger animation
+        void shootingStar.offsetWidth; // Force CSS animation re-trigger
         shootingStar.classList.add('animate');
       }
 
@@ -741,7 +720,7 @@
         setInterval(triggerMeteor, 30000);
       }, 5000);
 
-      // 3D Card Physics & Sheen
+      // 3D Card Physics, Sheen & Multi-Depth Parallax Connection
       const card = document.getElementById('card');
       const scene = document.getElementById('scene');
       const sheenFront = document.getElementById('sheenFront');
@@ -774,6 +753,7 @@
         return start + (end - start) * factor;
       }
 
+      // Combined Animation Loop: Card Physics + Multi-Depth Parallax Render
       function animationLoop() {
         if (isAnimating) {
           currentRotY = lerp(currentRotY, targetRotY, 0.12);
@@ -786,15 +766,45 @@
           }
           updateCardTransform();
         }
+
+        // Render Stars with Spatial Parallax linked directly to Card Angles
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let star of stars) {
+          star.alpha += star.speed;
+          if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
+
+          // Parallax calculation: Foreground stars move subtly more than background stars
+          const parallaxFactor = star.layer * 0.18;
+          let drawX = (star.baseX - currentRotY * parallaxFactor) % canvas.width;
+          let drawY = (star.baseY + currentRotX * parallaxFactor) % canvas.height;
+          
+          if (drawX < 0) drawX += canvas.width;
+          if (drawY < 0) drawY += canvas.height;
+
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, star.size, 0, Math.PI * 2);
+          if (star.hue === 'gold') {
+            ctx.fillStyle = `rgba(229, 196, 139, ${star.alpha * 0.8})`;
+          } else if (star.hue === 'blue') {
+            ctx.fillStyle = `rgba(180, 210, 255, ${star.alpha * 0.75})`;
+          } else {
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+          }
+          ctx.fill();
+        }
+
         requestAnimationFrame(animationLoop);
       }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
       requestAnimationFrame(animationLoop);
 
       // Gesture Controller (100% Free-Angle Hold)
       scene.addEventListener('pointerdown', (e) => {
         if (e.button === 2) return;
         isDragging = true;
-        isAnimating = false; // Freeze any running transition immediately
+        isAnimating = false;
         startX = e.clientX;
         startY = e.clientY;
         startRotY = currentRotY;
@@ -809,7 +819,7 @@
         const dy = e.clientY - startY;
         totalDistance = Math.hypot(dx, dy);
 
-        // 1:1 rotation follow
+        // 1:1 real-time direct rotational tracking
         currentRotY = startRotY + dx * 0.65;
         currentRotX = Math.max(-65, Math.min(65, startRotX - dy * 0.45));
         
@@ -825,7 +835,7 @@
           scene.releasePointerCapture(e.pointerId);
         } catch (_) {}
 
-        // Tap detected (User clicked without dragging) -> Smooth 180° flip
+        // Single Tap -> 180° rotation
         if (totalDistance < 7) {
           isAnimating = true;
           playFlickSound();
@@ -837,13 +847,13 @@
           }
           targetRotX = 0;
         }
-        // If dragged: ABSOLUTE FREEZE. No code touches currentRotY or currentRotX.
+        // If dragged: Card permanently freezes at the exact release position
       }
 
       scene.addEventListener('pointerup', finishPointer);
       scene.addEventListener('pointercancel', finishPointer);
 
-      // Right-Click Flip for Desktop
+      // Desktop Right-Click Flip
       window.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         isAnimating = true;
