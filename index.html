@@ -6,10 +6,10 @@
   <title>Portfolio | Vansh Dabas &amp; Priyanshu Sehrawat</title>
   <style>
     :root {
-      --bg: #07080b;
-      --card-bg: #0d0f14;
-      --gold-border: rgba(220, 185, 125, 0.45);
-      --silver-border: rgba(215, 222, 235, 0.45);
+      --bg: #050608;
+      --card-bg: #0c0e14;
+      --gold-border: rgba(220, 185, 125, 0.55);
+      --silver-border: rgba(215, 222, 235, 0.55);
       --text-main: #f5f5f7;
       --text-sub: #9ea4b0;
       --accent-gold: #e5c48b;
@@ -17,6 +17,7 @@
       --btn-bg-start: #232733;
       --btn-bg-end: #161922;
       --border-btn: rgba(255, 255, 255, 0.12);
+      --card-thickness: 10px;
     }
 
     * {
@@ -42,7 +43,89 @@
       align-items: center;
       justify-content: center;
       perspective: 1400px;
-      background: radial-gradient(circle at 50% 50%, #151821 0%, #08090d 75%, #040507 100%);
+      position: relative;
+    }
+
+    /* Starry Background Canvas */
+    #spaceCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Shooting Star Container */
+    .shooting-star {
+      position: fixed;
+      top: -100px;
+      left: -100px;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), rgba(220, 185, 125, 0.6), transparent);
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+      transform: rotate(-35deg);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .shooting-star.animate {
+      animation: shoot 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+
+    @keyframes shoot {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(-35deg) scaleX(0.2);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(120px, 120px) rotate(-35deg) scaleX(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(650px, 650px) rotate(-35deg) scaleX(0.8);
+      }
+    }
+
+    /* Top Audio Toggle */
+    .audio-btn {
+      position: fixed;
+      top: calc(24px + env(safe-area-inset-top));
+      right: calc(24px + env(safe-area-inset-right));
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #b0b7c3;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .audio-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      transform: scale(1.05);
+    }
+
+    .audio-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     /* 3D Scene Wrapper */
@@ -52,6 +135,7 @@
       position: relative;
       perspective: 1400px;
       touch-action: none;
+      z-index: 10;
     }
 
     @media (min-width: 768px) {
@@ -76,6 +160,43 @@
       cursor: grabbing;
     }
 
+    /* Solid 3D Edge Slab Thickness */
+    .edge-left, .edge-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: var(--card-thickness);
+      background: linear-gradient(180deg, #24221c 0%, #16181e 50%, #20222a 100%);
+      border: 0.5px solid rgba(220, 185, 125, 0.35);
+      pointer-events: none;
+    }
+    .edge-left {
+      left: calc(var(--card-thickness) / -2);
+      transform: rotateY(-90deg);
+    }
+    .edge-right {
+      right: calc(var(--card-thickness) / -2);
+      transform: rotateY(90deg);
+    }
+
+    .edge-top, .edge-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: var(--card-thickness);
+      background: #181a22;
+      border: 0.5px solid rgba(255, 255, 255, 0.15);
+      pointer-events: none;
+    }
+    .edge-top {
+      top: calc(var(--card-thickness) / -2);
+      transform: rotateX(90deg);
+    }
+    .edge-bottom {
+      bottom: calc(var(--card-thickness) / -2);
+      transform: rotateX(-90deg);
+    }
+
     .card-face {
       position: absolute;
       inset: 0;
@@ -88,10 +209,26 @@
       justify-content: center;
       background: var(--card-bg);
       box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 25px 60px rgba(0, 0, 0, 0.9),
         inset 0 0 0 1px rgba(255, 255, 255, 0.04);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* Metallic holographic sheen */
+    .sheen {
+      position: absolute;
+      inset: -100%;
+      background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.07) 48%,
+        rgba(220, 185, 125, 0.12) 50%,
+        transparent 55%
+      );
+      transform: translate3d(0, 0, 0);
       pointer-events: none;
     }
 
@@ -99,22 +236,22 @@
     .face-front {
       border: 1px solid var(--gold-border);
       box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.85),
-        0 0 20px rgba(229, 196, 139, 0.08),
+        0 25px 60px rgba(0, 0, 0, 0.9),
+        0 0 24px rgba(229, 196, 139, 0.12),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(0deg) translateZ(1.5px);
-      -webkit-transform: rotateY(0deg) translateZ(1.5px);
+      transform: rotateY(0deg) translateZ(calc(var(--card-thickness) / 2));
+      -webkit-transform: rotateY(0deg) translateZ(calc(var(--card-thickness) / 2));
     }
 
     /* Back side - Platinum Silver hairline */
     .face-back {
       border: 1px solid var(--silver-border);
       box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.85),
-        0 0 20px rgba(209, 216, 227, 0.08),
+        0 25px 60px rgba(0, 0, 0, 0.9),
+        0 0 24px rgba(209, 216, 227, 0.12),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(180deg) translateZ(1.5px);
-      -webkit-transform: rotateY(180deg) translateZ(1.5px);
+      transform: rotateY(180deg) translateZ(calc(var(--card-thickness) / 2));
+      -webkit-transform: rotateY(180deg) translateZ(calc(var(--card-thickness) / 2));
     }
 
     .name {
@@ -244,7 +381,7 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(4, 5, 8, 0.8);
+      background: rgba(4, 5, 8, 0.82);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 200;
@@ -387,11 +524,27 @@
 </head>
 <body>
 
+  <!-- Starry Background Canvas -->
+  <canvas id="spaceCanvas"></canvas>
+  <div class="shooting-star" id="shootingStar"></div>
+
+  <!-- Audio Toggle -->
+  <button class="audio-btn" id="audioBtn" aria-label="Toggle Sound">
+    <svg id="audioIcon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+  </button>
+
   <!-- 3D Card Scene -->
   <div class="scene" id="scene">
     <div class="card" id="card">
+      <!-- 3D Slab Thickness Edges -->
+      <div class="edge-left"></div>
+      <div class="edge-right"></div>
+      <div class="edge-top"></div>
+      <div class="edge-bottom"></div>
+
       <!-- Front: Vansh Dabas -->
       <div class="card-face face-front">
+        <div class="sheen" id="sheenFront"></div>
         <h1 class="name">Vansh Dabas</h1>
         <div class="stream">11th Humanities</div>
         <div class="divider"></div>
@@ -405,6 +558,7 @@
 
       <!-- Back: Priyanshu Sehrawat -->
       <div class="card-face face-back">
+        <div class="sheen" id="sheenBack"></div>
         <h1 class="name">Priyanshu Sehrawat</h1>
         <div class="stream">11th Humanities</div>
         <div class="divider"></div>
@@ -438,7 +592,7 @@
 
       <div class="file-list">
         <!-- Document 1: Main Project Document -->
-        <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="file-item">
+        <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="file-item" id="docLink">
           <div class="file-info">
             <div class="file-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -458,12 +612,140 @@
 
   <script>
     (function () {
+      // Audio Synthesizer (Zero External Dependencies)
+      let audioEnabled = true;
+      let audioCtx = null;
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      function playFlickSound() {
+        if (!audioEnabled) return;
+        try {
+          const ctx = getAudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(120, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.08);
+        } catch (_) {}
+      }
+
+      function playClickSound() {
+        if (!audioEnabled) return;
+        try {
+          const ctx = getAudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.04);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.04);
+        } catch (_) {}
+      }
+
+      // Audio Toggle Button
+      const audioBtn = document.getElementById('audioBtn');
+      const audioIcon = document.getElementById('audioIcon');
+      audioBtn.addEventListener('click', () => {
+        audioEnabled = !audioEnabled;
+        if (audioEnabled) {
+          audioIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+          playClickSound();
+        } else {
+          audioIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+        }
+      });
+
+      // Realistic Night Starfield Canvas
+      const canvas = document.getElementById('spaceCanvas');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const numStars = 180;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initStars();
+      }
+
+      function initStars() {
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 1.4 + 0.3,
+            alpha: Math.random() * 0.7 + 0.3,
+            speed: Math.random() * 0.02 + 0.005,
+            hue: Math.random() > 0.8 ? 'gold' : (Math.random() > 0.6 ? 'blue' : 'white')
+          });
+        }
+      }
+
+      function renderStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let star of stars) {
+          star.alpha += star.speed;
+          if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
+
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          if (star.hue === 'gold') {
+            ctx.fillStyle = `rgba(229, 196, 139, ${star.alpha * 0.8})`;
+          } else if (star.hue === 'blue') {
+            ctx.fillStyle = `rgba(180, 210, 255, ${star.alpha * 0.75})`;
+          } else {
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+          }
+          ctx.fill();
+        }
+        requestAnimationFrame(renderStars);
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      renderStars();
+
+      // Shooting Star (First at 5s, then every 30s)
+      const shootingStar = document.getElementById('shootingStar');
+      function triggerMeteor() {
+        const startX = Math.random() * (window.innerWidth * 0.6);
+        const startY = Math.random() * (window.innerHeight * 0.4);
+        shootingStar.style.top = `${startY}px`;
+        shootingStar.style.left = `${startX}px`;
+        shootingStar.classList.remove('animate');
+        void shootingStar.offsetWidth; // re-trigger animation
+        shootingStar.classList.add('animate');
+      }
+
+      setTimeout(() => {
+        triggerMeteor();
+        setInterval(triggerMeteor, 30000);
+      }, 5000);
+
+      // 3D Card Physics & Sheen
       const card = document.getElementById('card');
       const scene = document.getElementById('scene');
-      const filesBtn = document.getElementById('filesBtn');
-      const modalBackdrop = document.getElementById('modalBackdrop');
-      const modalPanel = document.getElementById('modalPanel');
-      const closeBtn = document.getElementById('closeBtn');
+      const sheenFront = document.getElementById('sheenFront');
+      const sheenBack = document.getElementById('sheenBack');
 
       let currentRotY = 0;
       let currentRotX = 0;
@@ -480,6 +762,12 @@
 
       function updateCardTransform() {
         card.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+        
+        // Holographic sheen position update
+        const sheenX = ((currentRotY % 360) / 180) * 80;
+        const sheenY = (currentRotX / 60) * 80;
+        sheenFront.style.transform = `translate3d(${sheenX}%, ${sheenY}%, 0)`;
+        sheenBack.style.transform = `translate3d(${-sheenX}%, ${sheenY}%, 0)`;
       }
 
       function lerp(start, end, factor) {
@@ -502,11 +790,11 @@
       }
       requestAnimationFrame(animationLoop);
 
-      // Free-angle gesture handler
+      // Gesture Controller (100% Free-Angle Hold)
       scene.addEventListener('pointerdown', (e) => {
         if (e.button === 2) return;
         isDragging = true;
-        isAnimating = false;
+        isAnimating = false; // Freeze any running transition immediately
         startX = e.clientX;
         startY = e.clientY;
         startRotY = currentRotY;
@@ -521,7 +809,7 @@
         const dy = e.clientY - startY;
         totalDistance = Math.hypot(dx, dy);
 
-        // Real-time tracking
+        // 1:1 rotation follow
         currentRotY = startRotY + dx * 0.65;
         currentRotX = Math.max(-65, Math.min(65, startRotX - dy * 0.45));
         
@@ -537,9 +825,10 @@
           scene.releasePointerCapture(e.pointerId);
         } catch (_) {}
 
-        // Tap detected (no drag) -> smooth 180° flip
+        // Tap detected (User clicked without dragging) -> Smooth 180° flip
         if (totalDistance < 7) {
           isAnimating = true;
+          playFlickSound();
           const nearest180 = Math.round(targetRotY / 180) * 180;
           if (Math.abs(targetRotY - nearest180) < 15) {
             targetRotY = nearest180 + 180;
@@ -548,28 +837,41 @@
           }
           targetRotX = 0;
         }
-        // If dragged, card stays at the exact angle where released
+        // If dragged: ABSOLUTE FREEZE. No code touches currentRotY or currentRotX.
       }
 
       scene.addEventListener('pointerup', finishPointer);
       scene.addEventListener('pointercancel', finishPointer);
 
-      // Desktop Right-Click Flip
+      // Right-Click Flip for Desktop
       window.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         isAnimating = true;
+        playFlickSound();
         const nearest180 = Math.round(targetRotY / 180) * 180;
         targetRotY = nearest180 + 180;
         targetRotX = 0;
       });
 
-      // Modal Controls
+      // Files Drawer Controls
+      const filesBtn = document.getElementById('filesBtn');
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      const modalPanel = document.getElementById('modalPanel');
+      const closeBtn = document.getElementById('closeBtn');
+      const docLink = document.getElementById('docLink');
+
       filesBtn.addEventListener('click', () => {
+        playClickSound();
         modalBackdrop.classList.add('open');
       });
 
       closeBtn.addEventListener('click', () => {
+        playClickSound();
         modalBackdrop.classList.remove('open');
+      });
+
+      docLink.addEventListener('click', () => {
+        playClickSound();
       });
 
       modalBackdrop.addEventListener('click', (e) => {
