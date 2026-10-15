@@ -17,7 +17,7 @@
       --btn-bg-start: #232733;
       --btn-bg-end: #161922;
       --border-btn: rgba(255, 255, 255, 0.12);
-      --card-thickness: 10px;
+      --radius: 22px;
     }
 
     * {
@@ -91,40 +91,18 @@
       }
     }
 
-    /* Top Audio Toggle */
-    .audio-btn {
+    /* Secret Invisible Trigger Button (Top-Right Symmetrical Placement) */
+    .secret-trigger-btn {
       position: fixed;
-      top: calc(24px + env(safe-area-inset-top));
-      right: calc(24px + env(safe-area-inset-right));
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #b0b7c3;
+      top: calc(34px + env(safe-area-inset-top));
+      right: calc(34px + env(safe-area-inset-right));
+      width: 50px;
+      height: 50px;
+      background: transparent;
+      border: none;
+      outline: none;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: background 0.2s, color 0.2s, transform 0.2s;
-    }
-
-    .audio-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-      transform: scale(1.05);
-    }
-
-    .audio-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      z-index: 120;
     }
 
     /* 3D Scene Wrapper */
@@ -150,7 +128,7 @@
       position: relative;
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
-      border-radius: 22px;
+      border-radius: var(--radius);
       cursor: grab;
       will-change: transform;
     }
@@ -159,41 +137,35 @@
       cursor: grabbing;
     }
 
-    /* Solid 3D Edge Slab Thickness */
-    .edge-left, .edge-right {
+    /* Curvy 3D Chamfer Slices */
+    .card-core {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: var(--card-thickness);
-      background: linear-gradient(180deg, #24221c 0%, #16181e 50%, #20222a 100%);
-      border: 0.5px solid rgba(220, 185, 125, 0.35);
+      inset: 0;
+      border-radius: var(--radius);
+      background: #141720;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transform: translateZ(0px);
       pointer-events: none;
-    }
-    .edge-left {
-      left: calc(var(--card-thickness) / -2);
-      transform: rotateY(-90deg);
-    }
-    .edge-right {
-      right: calc(var(--card-thickness) / -2);
-      transform: rotateY(90deg);
     }
 
-    .edge-top, .edge-bottom {
+    .card-chamfer-front {
       position: absolute;
-      left: 0;
-      right: 0;
-      height: var(--card-thickness);
-      background: #181a22;
-      border: 0.5px solid rgba(255, 255, 255, 0.15);
+      inset: 0;
+      border-radius: var(--radius);
+      background: #12141c;
+      border: 1px solid rgba(220, 185, 125, 0.25);
+      transform: translateZ(2px);
       pointer-events: none;
     }
-    .edge-top {
-      top: calc(var(--card-thickness) / -2);
-      transform: rotateX(90deg);
-    }
-    .edge-bottom {
-      bottom: calc(var(--card-thickness) / -2);
-      transform: rotateX(-90deg);
+
+    .card-chamfer-back {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      background: #12141c;
+      border: 1px solid rgba(215, 222, 235, 0.25);
+      transform: translateZ(-2px);
+      pointer-events: none;
     }
 
     .card-face {
@@ -201,7 +173,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      border-radius: 22px;
+      border-radius: var(--radius);
       padding: 34px 28px;
       display: flex;
       flex-direction: column;
@@ -216,7 +188,7 @@
       overflow: hidden;
     }
 
-    /* Metallic holographic sheen */
+    /* Sheen Layer */
     .sheen {
       position: absolute;
       inset: -100%;
@@ -231,26 +203,26 @@
       pointer-events: none;
     }
 
-    /* Front side - Champagne Gold hairline */
+    /* Front: Vansh Dabas */
     .face-front {
       border: 1px solid var(--gold-border);
       box-shadow: 
         0 25px 60px rgba(0, 0, 0, 0.9),
         0 0 24px rgba(229, 196, 139, 0.12),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(0deg) translateZ(calc(var(--card-thickness) / 2));
-      -webkit-transform: rotateY(0deg) translateZ(calc(var(--card-thickness) / 2));
+      transform: rotateY(0deg) translateZ(4px);
+      -webkit-transform: rotateY(0deg) translateZ(4px);
     }
 
-    /* Back side - Platinum Silver hairline */
+    /* Back: Priyanshu Sehrawat */
     .face-back {
       border: 1px solid var(--silver-border);
       box-shadow: 
         0 25px 60px rgba(0, 0, 0, 0.9),
         0 0 24px rgba(209, 216, 227, 0.12),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(180deg) translateZ(calc(var(--card-thickness) / 2));
-      -webkit-transform: rotateY(180deg) translateZ(calc(var(--card-thickness) / 2));
+      transform: rotateY(180deg) translateZ(4px);
+      -webkit-transform: rotateY(180deg) translateZ(4px);
     }
 
     .name {
@@ -374,15 +346,15 @@
       stroke-linejoin: round;
     }
 
-    /* Files Modal / List Drawer */
+    /* Modals & Backdrop */
     .modal-backdrop {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(4, 5, 8, 0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(4, 5, 8, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 200;
       display: flex;
       align-items: center;
@@ -430,12 +402,6 @@
       gap: 8px;
     }
 
-    .modal-subtitle {
-      font-size: 13px;
-      color: var(--text-sub);
-      margin-bottom: 20px;
-    }
-
     .close-btn {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -456,6 +422,7 @@
       color: #ffffff;
     }
 
+    /* Files List Items */
     .file-list {
       display: flex;
       flex-direction: column;
@@ -472,13 +439,12 @@
       border-radius: 14px;
       text-decoration: none;
       color: inherit;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
     .file-item:hover {
       background: rgba(255, 255, 255, 0.07);
       border-color: rgba(220, 185, 125, 0.4);
-      transform: translateY(-1px);
     }
 
     .file-info {
@@ -515,9 +481,139 @@
       font-size: 13px;
       font-weight: 600;
       color: var(--accent-gold);
+    }
+
+    /* Secret Passcode Box */
+    .passcode-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .passcode-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(220, 185, 125, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 20px;
+      letter-spacing: 6px;
+      text-align: center;
+      color: #ffffff;
+      outline: none;
+      font-family: monospace;
+      transition: border-color 0.2s;
+    }
+
+    .passcode-input:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 15px rgba(220, 185, 125, 0.25);
+    }
+
+    .passcode-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #2b3040, #181b24);
+      border: 1px solid rgba(220, 185, 125, 0.4);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .passcode-btn:active {
+      transform: scale(0.98);
+    }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    /* Secret In-Site Video Theatre */
+    .video-theatre {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      padding: 24px;
+    }
+
+    .video-theatre.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .theatre-controls {
+      width: 100%;
+      max-width: 720px;
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .theatre-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+    }
+
+    .theatre-close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .theatre-close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-wrapper {
+      width: 100%;
+      max-width: 720px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 30px rgba(220, 185, 125, 0.15);
+      background: #000000;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      display: block;
+      outline: none;
     }
   </style>
 </head>
@@ -527,19 +623,16 @@
   <canvas id="spaceCanvas"></canvas>
   <div class="shooting-star" id="shootingStar"></div>
 
-  <!-- Audio Toggle -->
-  <button class="audio-btn" id="audioBtn" aria-label="Toggle Sound">
-    <svg id="audioIcon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-  </button>
+  <!-- Symmetrical Invisible Trigger (Top-Right) -->
+  <button class="secret-trigger-btn" id="secretTriggerBtn" aria-label="Trigger"></button>
 
   <!-- 3D Card Scene -->
   <div class="scene" id="scene">
     <div class="card" id="card">
-      <!-- 3D Slab Thickness Edges -->
-      <div class="edge-left"></div>
-      <div class="edge-right"></div>
-      <div class="edge-top"></div>
-      <div class="edge-bottom"></div>
+      <!-- Smooth Curvy 3D Chamfer Depth Slices -->
+      <div class="card-chamfer-back"></div>
+      <div class="card-core"></div>
+      <div class="card-chamfer-front"></div>
 
       <!-- Front: Vansh Dabas -->
       <div class="card-face face-front">
@@ -587,10 +680,9 @@
         </div>
         <button class="close-btn" id="closeBtn" aria-label="Close">✕</button>
       </div>
-      <div class="modal-subtitle">Choose a file to view full document:</div>
+      <div style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px;">Choose a file to view full document:</div>
 
       <div class="file-list">
-        <!-- Document 1: Main Project Document -->
         <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="file-item" id="docLink">
           <div class="file-info">
             <div class="file-icon">
@@ -601,32 +693,57 @@
               <div class="file-meta">Project Document • 38 Pages</div>
             </div>
           </div>
-          <div class="open-tag">
-            Open ↗
-          </div>
+          <div class="open-tag">Open ↗</div>
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- Secret Passcode Modal -->
+  <div class="modal-backdrop" id="passcodeBackdrop">
+    <div class="modal-panel" id="passcodePanel">
+      <div class="modal-header">
+        <div class="modal-title" style="letter-spacing: 1px; font-size: 16px;">
+          ACCESS REQUIRED
+        </div>
+        <button class="close-btn" id="passcodeCloseBtn">✕</button>
+      </div>
+      <div style="font-size: 13px; color: var(--text-sub);">Enter code to unlock archive:</div>
+
+      <div class="passcode-box">
+        <input type="password" id="passcodeInput" class="passcode-input" maxlength="4" placeholder="•••" autocomplete="off" />
+        <div id="errorMsg" class="error-msg">INVALID CODE</div>
+        <button class="passcode-btn" id="passcodeSubmitBtn">Authenticate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret In-Site Video Theatre Overlay -->
+  <div class="video-theatre" id="videoTheatre">
+    <div class="theatre-controls">
+      <div class="theatre-title">Secret Archive Playback</div>
+      <button class="theatre-close-btn" id="theatreCloseBtn">
+        Close ✕
+      </button>
+    </div>
+    <div class="video-wrapper">
+      <video id="secretVideo" playsinline controls preload="metadata">
+        <source src="ScreenRecording_10-06-2026 22-39-03_1.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 
   <script>
     (function () {
       // Audio Synthesizer
-      let audioEnabled = true;
       let audioCtx = null;
-
       function getAudioContext() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         return audioCtx;
       }
 
       function playFlickSound() {
-        if (!audioEnabled) return;
         try {
           const ctx = getAudioContext();
           const osc = ctx.createOscillator();
@@ -644,7 +761,6 @@
       }
 
       function playClickSound() {
-        if (!audioEnabled) return;
         try {
           const ctx = getAudioContext();
           const osc = ctx.createOscillator();
@@ -661,20 +777,7 @@
         } catch (_) {}
       }
 
-      // Audio Toggle Button
-      const audioBtn = document.getElementById('audioBtn');
-      const audioIcon = document.getElementById('audioIcon');
-      audioBtn.addEventListener('click', () => {
-        audioEnabled = !audioEnabled;
-        if (audioEnabled) {
-          audioIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
-          playClickSound();
-        } else {
-          audioIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
-        }
-      });
-
-      // Realistic Night Starfield Canvas with 3-Layer Depth Parallax
+      // Starfield Canvas with Depth Parallax
       const canvas = document.getElementById('spaceCanvas');
       const ctx = canvas.getContext('2d');
       let stars = [];
@@ -696,22 +799,21 @@
             size: layer === 1 ? (Math.random() * 0.7 + 0.3) : (layer === 2 ? (Math.random() * 0.9 + 0.7) : (Math.random() * 1.2 + 1.1)),
             alpha: Math.random() * 0.7 + 0.3,
             speed: Math.random() * 0.02 + 0.005,
-            layer: layer, // 1 = deep distant background, 3 = foreground
+            layer: layer,
             hue: Math.random() > 0.82 ? 'gold' : (Math.random() > 0.65 ? 'blue' : 'white')
           });
         }
       }
 
-      // Shooting Star (Top-Right Origin, First at 5s, then every 30s)
+      // Shooting Star (Top-Right Origin, 5s delay, 30s interval)
       const shootingStar = document.getElementById('shootingStar');
       function triggerMeteor() {
-        // Spawn precisely along the top-right quarter of screen
         const startX = window.innerWidth - (Math.random() * (window.innerWidth * 0.35) + 30);
         const startY = Math.random() * (window.innerHeight * 0.22) + 10;
         shootingStar.style.top = `${startY}px`;
         shootingStar.style.left = `${startX}px`;
         shootingStar.classList.remove('animate');
-        void shootingStar.offsetWidth; // Force CSS animation re-trigger
+        void shootingStar.offsetWidth;
         shootingStar.classList.add('animate');
       }
 
@@ -720,7 +822,7 @@
         setInterval(triggerMeteor, 30000);
       }, 5000);
 
-      // 3D Card Physics, Sheen & Multi-Depth Parallax Connection
+      // Card 3D Physics
       const card = document.getElementById('card');
       const scene = document.getElementById('scene');
       const sheenFront = document.getElementById('sheenFront');
@@ -741,8 +843,6 @@
 
       function updateCardTransform() {
         card.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
-        
-        // Holographic sheen position update
         const sheenX = ((currentRotY % 360) / 180) * 80;
         const sheenY = (currentRotX / 60) * 80;
         sheenFront.style.transform = `translate3d(${sheenX}%, ${sheenY}%, 0)`;
@@ -753,7 +853,6 @@
         return start + (end - start) * factor;
       }
 
-      // Combined Animation Loop: Card Physics + Multi-Depth Parallax Render
       function animationLoop() {
         if (isAnimating) {
           currentRotY = lerp(currentRotY, targetRotY, 0.12);
@@ -767,13 +866,11 @@
           updateCardTransform();
         }
 
-        // Render Stars with Spatial Parallax linked directly to Card Angles
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let star of stars) {
           star.alpha += star.speed;
           if (star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
 
-          // Parallax calculation: Foreground stars move subtly more than background stars
           const parallaxFactor = star.layer * 0.18;
           let drawX = (star.baseX - currentRotY * parallaxFactor) % canvas.width;
           let drawY = (star.baseY + currentRotX * parallaxFactor) % canvas.height;
@@ -800,7 +897,7 @@
       resizeCanvas();
       requestAnimationFrame(animationLoop);
 
-      // Gesture Controller (100% Free-Angle Hold)
+      // Card Gestures (100% Free-Angle Freeze)
       scene.addEventListener('pointerdown', (e) => {
         if (e.button === 2) return;
         isDragging = true;
@@ -819,7 +916,6 @@
         const dy = e.clientY - startY;
         totalDistance = Math.hypot(dx, dy);
 
-        // 1:1 real-time direct rotational tracking
         currentRotY = startRotY + dx * 0.65;
         currentRotX = Math.max(-65, Math.min(65, startRotX - dy * 0.45));
         
@@ -835,7 +931,6 @@
           scene.releasePointerCapture(e.pointerId);
         } catch (_) {}
 
-        // Single Tap -> 180° rotation
         if (totalDistance < 7) {
           isAnimating = true;
           playFlickSound();
@@ -847,13 +942,11 @@
           }
           targetRotX = 0;
         }
-        // If dragged: Card permanently freezes at the exact release position
       }
 
       scene.addEventListener('pointerup', finishPointer);
       scene.addEventListener('pointercancel', finishPointer);
 
-      // Desktop Right-Click Flip
       window.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         isAnimating = true;
@@ -868,7 +961,6 @@
       const modalBackdrop = document.getElementById('modalBackdrop');
       const modalPanel = document.getElementById('modalPanel');
       const closeBtn = document.getElementById('closeBtn');
-      const docLink = document.getElementById('docLink');
 
       filesBtn.addEventListener('click', () => {
         playClickSound();
@@ -880,19 +972,79 @@
         modalBackdrop.classList.remove('open');
       });
 
-      docLink.addEventListener('click', () => {
-        playClickSound();
+      modalBackdrop.addEventListener('click', (e) => {
+        if (!modalPanel.contains(e.target)) modalBackdrop.classList.remove('open');
       });
 
-      modalBackdrop.addEventListener('click', (e) => {
-        if (!modalPanel.contains(e.target)) {
-          modalBackdrop.classList.remove('open');
+      // Secret Trigger & Passcode Logic
+      const secretTriggerBtn = document.getElementById('secretTriggerBtn');
+      const passcodeBackdrop = document.getElementById('passcodeBackdrop');
+      const passcodePanel = document.getElementById('passcodePanel');
+      const passcodeCloseBtn = document.getElementById('passcodeCloseBtn');
+      const passcodeInput = document.getElementById('passcodeInput');
+      const passcodeSubmitBtn = document.getElementById('passcodeSubmitBtn');
+      const errorMsg = document.getElementById('errorMsg');
+
+      const videoTheatre = document.getElementById('videoTheatre');
+      const secretVideo = document.getElementById('secretVideo');
+      const theatreCloseBtn = document.getElementById('theatreCloseBtn');
+
+      secretTriggerBtn.addEventListener('click', () => {
+        playClickSound();
+        passcodeBackdrop.classList.add('open');
+        passcodeInput.value = '';
+        errorMsg.style.display = 'none';
+        setTimeout(() => passcodeInput.focus(), 150);
+      });
+
+      passcodeCloseBtn.addEventListener('click', () => {
+        playClickSound();
+        passcodeBackdrop.classList.remove('open');
+      });
+
+      passcodeBackdrop.addEventListener('click', (e) => {
+        if (!passcodePanel.contains(e.target)) passcodeBackdrop.classList.remove('open');
+      });
+
+      function verifyCode() {
+        if (passcodeInput.value.trim() === '007') {
+          playClickSound();
+          passcodeBackdrop.classList.remove('open');
+          
+          // Open In-Site Video Theatre
+          videoTheatre.classList.add('open');
+          secretVideo.currentTime = 0;
+          secretVideo.play().catch(() => {});
+        } else {
+          errorMsg.style.display = 'block';
+          passcodeInput.value = '';
+          passcodeInput.focus();
         }
+      }
+
+      passcodeSubmitBtn.addEventListener('click', verifyCode);
+      passcodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') verifyCode();
+      });
+
+      // Exit Secret Video & Return to Normal Page
+      function closeVideoTheatre() {
+        playClickSound();
+        secretVideo.pause();
+        secretVideo.currentTime = 0;
+        videoTheatre.classList.remove('open');
+      }
+
+      theatreCloseBtn.addEventListener('click', closeVideoTheatre);
+      videoTheatre.addEventListener('click', (e) => {
+        if (e.target === videoTheatre) closeVideoTheatre();
       });
 
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) {
-          modalBackdrop.classList.remove('open');
+        if (e.key === 'Escape') {
+          if (videoTheatre.classList.contains('open')) closeVideoTheatre();
+          if (modalBackdrop.classList.contains('open')) modalBackdrop.classList.remove('open');
+          if (passcodeBackdrop.classList.contains('open')) passcodeBackdrop.classList.remove('open');
         }
       });
     })();
