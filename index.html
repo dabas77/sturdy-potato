@@ -4,722 +4,593 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Portfolio | Vansh Dabas &amp; Priyanshu Sehrawat</title>
-
-  <!-- Typography: Inter Font Family -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    /* Global Reset & Base */
-    *, *::before, *::after {
+    :root {
+      --bg: #07080b;
+      --card-bg: #0d0f14;
+      --gold-border: rgba(220, 185, 125, 0.45);
+      --silver-border: rgba(215, 222, 235, 0.45);
+      --text-main: #f5f5f7;
+      --text-sub: #9ea4b0;
+      --accent-gold: #e5c48b;
+      --accent-silver: #d1d8e3;
+      --btn-bg-start: #232733;
+      --btn-bg-end: #161922;
+      --border-btn: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none;
     }
 
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #040507;
-      background: radial-gradient(circle at 50% 50%, #12141c 0%, #08090c 55%, #020204 100%);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: #f1f3f7;
+      background-color: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
     }
 
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-    }
-
-    /* Ambient Dynamic Spotlight */
-    .ambient-spotlight {
-      position: absolute;
-      width: 580px;
-      height: 580px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(226, 232, 240, 0.03) 45%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 1;
-      transform: translate(-50%, -50%);
-      will-change: left, top;
+      perspective: 1400px;
+      background: radial-gradient(circle at 50% 50%, #151821 0%, #08090d 75%, #040507 100%);
     }
 
     /* 3D Scene Wrapper */
-    .scene-wrapper {
+    .scene {
+      width: 320px;
+      height: 480px;
       position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      perspective: 1200px;
-      -webkit-perspective: 1200px;
+      perspective: 1400px;
+      touch-action: none;
     }
 
-    /* 3D Card Anchor Container */
-    .card-anchor {
-      width: 320px;
-      height: 470px;
+    @media (min-width: 768px) {
+      .scene {
+        width: 340px;
+        height: 510px;
+      }
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
       position: relative;
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
+      border-radius: 22px;
       cursor: grab;
-      touch-action: none; /* Prevents Safari default scroll hijacking */
       will-change: transform;
     }
 
-    .card-anchor:active {
+    .card:active {
       cursor: grabbing;
     }
 
-    /* Card Faces Base */
     .card-face {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       border-radius: 22px;
-      background: #0d0f14;
-      background: linear-gradient(155deg, #13161f 0%, #090a0d 100%);
-      padding: 44px 34px;
-      overflow: hidden;
+      padding: 34px 28px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      
-      /* WebKit Safari Dual-Layer Occlusion: Zero text bleed-through */
-      backface-visibility: hidden !important;
-      -webkit-backface-visibility: hidden !important;
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
-      transition: opacity 0.15s ease;
-    }
-
-    /* Front Face: Vansh Dabas (Champagne Gold Accent) */
-    .card-face.front {
-      transform: rotateY(0deg) translateZ(2px);
-      -webkit-transform: rotateY(0deg) translateZ(2px);
-      border: 1px solid rgba(212, 175, 55, 0.42);
+      background: var(--card-bg);
       box-shadow: 
-        0 30px 60px -15px rgba(0, 0, 0, 0.95),
-        inset 0 0 1px 1px rgba(212, 175, 55, 0.22),
-        0 0 25px rgba(212, 175, 55, 0.08);
-    }
-
-    /* Back Face: Priyanshu Sehrawat (Platinum Silver Accent) */
-    .card-face.back {
-      transform: rotateY(180deg) translateZ(2px);
-      -webkit-transform: rotateY(180deg) translateZ(2px);
-      border: 1px solid rgba(226, 232, 240, 0.42);
-      box-shadow: 
-        0 30px 60px -15px rgba(0, 0, 0, 0.95),
-        inset 0 0 1px 1px rgba(226, 232, 240, 0.22),
-        0 0 25px rgba(226, 232, 240, 0.08);
-    }
-
-    /* Subtle Specular Sheen Layer */
-    .sheen {
-      position: absolute;
-      inset: 0;
-      border-radius: 22px;
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       pointer-events: none;
-      background: linear-gradient(125deg, transparent 20%, rgba(255, 255, 255, 0.04) 45%, transparent 65%);
     }
 
-    /* Content Hierarchy */
-    .profile-card-content {
-      position: relative;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      transform: translateZ(24px);
-      -webkit-transform: translateZ(24px);
+    /* Front side - Champagne Gold hairline */
+    .face-front {
+      border: 1px solid var(--gold-border);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 0 20px rgba(229, 196, 139, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      transform: rotateY(0deg) translateZ(1px);
+      -webkit-transform: rotateY(0deg) translateZ(1px);
     }
 
-    .name-title {
+    /* Back side - Platinum Silver hairline */
+    .face-back {
+      border: 1px solid var(--silver-border);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 0 20px rgba(209, 216, 227, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      transform: rotateY(180deg) translateZ(1px);
+      -webkit-transform: rotateY(180deg) translateZ(1px);
+    }
+
+    .name {
       font-size: 26px;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      margin-bottom: 6px;
+      text-align: left;
     }
 
-    .card-face.front .name-title {
-      color: #f7eed8;
-      text-shadow: 0 0 16px rgba(212, 175, 55, 0.2);
-    }
-
-    .card-face.back .name-title {
-      color: #f1f4f9;
-      text-shadow: 0 0 16px rgba(226, 232, 240, 0.2);
-    }
-
-    .class-tag {
-      font-size: 15px;
+    .stream {
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+      text-align: left;
     }
 
-    .card-face.front .class-tag {
-      color: #dfcaa2;
+    .face-front .stream {
+      color: var(--accent-gold);
     }
 
-    .card-face.back .class-tag {
-      color: #b1b5be;
+    .face-back .stream {
+      color: var(--accent-silver);
     }
 
-    .metallic-divider {
-      width: 44px;
-      height: 1.5px;
-      border-radius: 2px;
-      margin: 2px 0 4px 0;
+    .divider {
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02));
+      margin-bottom: 24px;
     }
 
-    .card-face.front .metallic-divider {
-      background: linear-gradient(90deg, rgba(212, 175, 55, 0.8), transparent);
-    }
-
-    .card-face.back .metallic-divider {
-      background: linear-gradient(90deg, rgba(226, 232, 240, 0.8), transparent);
-    }
-
-    .hobbies-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 2px;
-    }
-
-    .hobbies-title {
-      font-size: 14px;
+    .section-title {
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 14px;
+      text-align: left;
     }
 
-    .card-face.front .hobbies-title {
-      color: #ecd5a7;
-    }
-
-    .card-face.back .hobbies-title {
-      color: #cbd5e1;
-    }
-
-    .hobbies-items {
+    .hobbies-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 10px;
+      text-align: left;
     }
 
-    .hobbies-items li {
-      font-size: 14px;
+    .hobbies-list li {
+      font-size: 15px;
       font-weight: 400;
-      color: #a3a8b5;
+      color: #cfd4dc;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .bullet-accent {
+    .bullet {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      flex-shrink: 0;
+      background: var(--text-sub);
+      display: inline-block;
     }
 
-    .card-face.front .bullet-accent {
-      background: #c9ab67;
-      box-shadow: 0 0 7px rgba(201, 171, 103, 0.7);
+    .face-front .bullet {
+      background: var(--accent-gold);
     }
 
-    .card-face.back .bullet-accent {
-      background: #cbd5e1;
-      box-shadow: 0 0 7px rgba(203, 213, 225, 0.7);
+    .face-back .bullet {
+      background: var(--accent-silver);
     }
 
-    /* REFINED FLOATING "FILES" BUTTON: BOTTOM-RIGHT WITH BREATHING ROOM */
-    .files-button {
+    /* Floating Files Button (Bottom-Right) */
+    .files-btn {
       position: fixed;
-      bottom: calc(34px + env(safe-area-inset-bottom, 0px));
-      right: calc(38px + env(safe-area-inset-right, 0px));
-      z-index: 9999;
-      
-      /* Gunmetal obsidian charcoal tint (noticeably distinguished from #040507 background) */
-      background: #1b1d24;
-      background: linear-gradient(145deg, #22252e 0%, #16181f 100%);
-      border: 1px solid rgba(212, 175, 55, 0.28);
-      color: #f7eed8;
-      
-      font-family: inherit;
+      bottom: calc(36px + env(safe-area-inset-bottom));
+      right: calc(36px + env(safe-area-inset-right));
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
+      border: 1px solid var(--border-btn);
+      border-radius: 999px;
+      color: #f1f3f7;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.04em;
-      padding: 13px 26px;
-      border-radius: 14px;
+      letter-spacing: 0.4px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      
       box-shadow: 
-        0 14px 34px rgba(0, 0, 0, 0.8),
-        0 2px 6px rgba(0, 0, 0, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07);
-      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                  box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
-                  border-color 0.28s ease, 
-                  background 0.28s ease;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
+        0 12px 30px rgba(0, 0, 0, 0.6),
+        0 0 15px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease;
+      touch-action: manipulation;
     }
 
-    .files-button svg {
-      width: 17px;
-      height: 17px;
+    .files-btn:hover {
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 
+        0 16px 36px rgba(0, 0, 0, 0.75),
+        0 0 20px rgba(220, 185, 125, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border-color: rgba(220, 185, 125, 0.4);
+    }
+
+    .files-btn:active {
+      transform: scale(0.97);
+    }
+
+    .files-btn svg {
+      width: 16px;
+      height: 16px;
       fill: none;
-      stroke: #d4af37;
-      stroke-width: 2.2;
+      stroke: currentColor;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
-      transition: stroke 0.25s ease;
     }
 
-    .files-button:hover {
-      transform: translateY(-3px) scale(1.04);
-      background: linear-gradient(145deg, #282c38 0%, #1c1e28 100%);
-      border-color: rgba(212, 175, 55, 0.6);
-      color: #ffffff;
-      box-shadow: 
-        0 18px 42px rgba(0, 0, 0, 0.9),
-        0 0 20px rgba(212, 175, 55, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    }
-
-    .files-button:hover svg {
-      stroke: #f7eed8;
-    }
-
-    .files-button:active {
-      transform: translateY(0) scale(0.97);
-    }
-
-    /* IN-SITE PDF MODAL WINDOW */
+    /* Files Modal / Drawer */
     .modal-backdrop {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(3, 4, 7, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      z-index: 10000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      background: rgba(4, 5, 8, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 200;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: calc(16px + env(safe-area-inset-top, 0px)) 18px calc(16px + env(safe-area-inset-bottom, 0px)) 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 20px;
     }
 
-    .modal-backdrop.is-active {
+    .modal-backdrop.open {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .modal-sheet {
+    .modal-panel {
       width: 100%;
-      max-width: 980px;
-      height: 90vh;
-      background: #0f1117;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 18px;
-      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.95);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transform: scale(0.96) translateY(12px);
-      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+      max-width: 440px;
+      background: linear-gradient(160deg, #181b24 0%, #10121a 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    .modal-backdrop.is-active .modal-sheet {
+    .modal-backdrop.open .modal-panel {
       transform: scale(1) translateY(0);
     }
 
-    /* Modal Header Bar */
-    .modal-topbar {
-      height: 56px;
-      background: #151821;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      margin-bottom: 20px;
     }
 
-    .modal-header-left {
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aeb4c0;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      transform: scale(1.05);
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Document Item Link */
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .file-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(220, 185, 125, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .file-info {
       display: flex;
       align-items: center;
       gap: 14px;
     }
 
-    .modal-doc-name {
-      font-size: 13.5px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: #cbd5e1;
-      text-transform: uppercase;
-    }
-
-    /* Crucial iPad Safari Native 38-Page Direct Reader Link */
-    .open-native-link {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: #d4af37;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      padding: 5px 12px;
-      border-radius: 8px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .open-native-link:hover {
-      background: rgba(212, 175, 55, 0.2);
-      border-color: rgba(212, 175, 55, 0.5);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-
-    .modal-close-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #f1f3f7;
-      font-size: 16px;
+    .file-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(220, 185, 125, 0.1);
+      border: 1px solid rgba(220, 185, 125, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.2s ease;
+      color: var(--accent-gold);
     }
 
-    .modal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: scale(1.06);
+    .file-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f5f6fa;
+      margin-bottom: 3px;
     }
 
-    /* Modal Viewer Frame */
-    .modal-content-area {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      background: #090a0e;
-      position: relative;
-      overflow: hidden;
-      -webkit-overflow-scrolling: touch;
+    .file-meta {
+      font-size: 12px;
+      color: var(--text-sub);
     }
 
-    .pdf-viewer-embed {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 480px) {
-      .card-anchor {
-        width: 290px;
-        height: 425px;
-      }
-      .card-face {
-        padding: 34px 26px;
-      }
-      .name-title {
-        font-size: 22px;
-      }
-      .class-tag {
-        font-size: 13.5px;
-      }
-      .files-button {
-        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-        right: calc(24px + env(safe-area-inset-right, 0px));
-        padding: 11px 22px;
-        font-size: 13px;
-      }
-      .open-native-link {
-        font-size: 11.5px;
-        padding: 4px 8px;
-      }
+    .open-tag {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient dynamic glow -->
-  <div class="ambient-spotlight" id="ambientSpotlight"></div>
+  <!-- 3D Card Scene -->
+  <div class="scene" id="scene">
+    <div class="card" id="card">
+      <!-- Front: Vansh Dabas -->
+      <div class="card-face face-front">
+        <h1 class="name">Vansh Dabas</h1>
+        <div class="stream">11th Humanities</div>
+        <div class="divider"></div>
+        <div class="section-title">Hobbies</div>
+        <ul class="hobbies-list">
+          <li><span class="bullet"></span>Gaming</li>
+          <li><span class="bullet"></span>Watching movies</li>
+          <li><span class="bullet"></span>Tech</li>
+        </ul>
+      </div>
 
-  <!-- 3D Interactive Card Scene -->
-  <main class="scene-wrapper" id="sceneWrapper">
-    <div class="card-anchor" id="cardAnchor" role="region" aria-label="3D Interactive Digital Playing Card">
-      
-      <!-- Front Face: Vansh Dabas -->
-      <section class="card-face front" id="frontFace" aria-label="Profile of Vansh Dabas">
-        <div class="sheen"></div>
-        <div class="profile-card-content">
-          <h1 class="name-title">Vansh Dabas</h1>
-          <p class="class-tag">11th Humanities</p>
-          <div class="metallic-divider"></div>
-          
-          <div class="hobbies-wrap">
-            <h2 class="hobbies-title">Hobbies</h2>
-            <ul class="hobbies-items">
-              <li><span class="bullet-accent"></span>Gaming</li>
-              <li><span class="bullet-accent"></span>Watching movies</li>
-              <li><span class="bullet-accent"></span>Tech</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- Back Face: Priyanshu Sehrawat -->
-      <section class="card-face back" id="backFace" aria-label="Profile of Priyanshu Sehrawat">
-        <div class="sheen"></div>
-        <div class="profile-card-content">
-          <h1 class="name-title">Priyanshu Sehrawat</h1>
-          <p class="class-tag">11th Humanities</p>
-          <div class="metallic-divider"></div>
-          
-          <div class="hobbies-wrap">
-            <h2 class="hobbies-title">Hobbies</h2>
-            <ul class="hobbies-items">
-              <li><span class="bullet-accent"></span>Gaming</li>
-              <li><span class="bullet-accent"></span>Football</li>
-              <li><span class="bullet-accent"></span>Music</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
+      <!-- Back: Priyanshu Sehrawat -->
+      <div class="card-face face-back">
+        <h1 class="name">Priyanshu Sehrawat</h1>
+        <div class="stream">11th Humanities</div>
+        <div class="divider"></div>
+        <div class="section-title">Hobbies</div>
+        <ul class="hobbies-list">
+          <li><span class="bullet"></span>Gaming</li>
+          <li><span class="bullet"></span>Football</li>
+          <li><span class="bullet"></span>Music</li>
+        </ul>
+      </div>
     </div>
-  </main>
+  </div>
 
-  <!-- Floating 'Files' Button in Bottom-Right with Breathing Space -->
-  <button class="files-button" id="filesBtn" type="button" aria-label="Open Document Files">
-    <svg viewBox="0 0 24 24">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-      <polyline points="14 2 14 8 20 8"></polyline>
-      <line x1="16" y1="13" x2="8" y2="13"></line>
-      <line x1="16" y1="17" x2="8" y2="17"></line>
-    </svg>
-    <span>Files</span>
+  <!-- Bottom-Right Files Button -->
+  <button class="files-btn" id="filesBtn" aria-label="Open Files">
+    <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+    Files
   </button>
 
-  <!-- In-Site PDF Modal -->
-  <div class="modal-backdrop" id="pdfModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-sheet">
-      <header class="modal-topbar">
-        <div class="modal-header-left">
-          <span class="modal-doc-name">Project Dossier (38 Pages)</span>
-          <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="open-native-link" title="Open in native 38-page scroll reader">
-            <span>Open Full Document</span>
-            <span>↗</span>
-          </a>
+  <!-- In-Site Files Drawer Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-panel" id="modalPanel">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-gold)"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          Documents
         </div>
-        <button class="modal-close-btn" id="closeModalBtn" type="button" aria-label="Close document modal">✕</button>
-      </header>
-      <div class="modal-content-area">
-        <iframe class="pdf-viewer-embed" id="pdfFrame" src="about:blank" title="38-Page PDF Viewer"></iframe>
+        <button class="close-btn" id="closeBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="file-list">
+        <!-- Opens full multi-page PDF natively in new tab -->
+        <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="file-item">
+          <div class="file-info">
+            <div class="file-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div>
+              <div class="file-name">document.pdf</div>
+              <div class="file-meta">Project Document • Full View</div>
+            </div>
+          </div>
+          <div class="open-tag">
+            Open ↗
+          </div>
+        </a>
       </div>
     </div>
   </div>
 
   <script>
-    (function() {
-      // DOM References
-      const cardAnchor = document.getElementById('cardAnchor');
-      const frontFace = document.getElementById('frontFace');
-      const backFace = document.getElementById('backFace');
-      const ambientSpotlight = document.getElementById('ambientSpotlight');
+    (function () {
+      const card = document.getElementById('card');
+      const scene = document.getElementById('scene');
       const filesBtn = document.getElementById('filesBtn');
-      const pdfModal = document.getElementById('pdfModal');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-      const pdfFrame = document.getElementById('pdfFrame');
+      const modalBackdrop = document.getElementById('modalBackdrop');
+      const modalPanel = document.getElementById('modalPanel');
+      const closeBtn = document.getElementById('closeBtn');
 
-      // 3D Motion Coordinates
-      let baseAngleY = 0; // 0deg (Vansh) or 180deg (Priyanshu)
-      let currentTiltX = 0;
-      let currentTiltY = 0;
-      let targetTiltX = 0;
-      let targetTiltY = 0;
+      // State Management
+      let rotY = 0;
+      let rotX = 0;
+      let targetRotY = 0;
+      let targetRotX = 0;
+      
+      let isDragging = false;
+      let isAnimatingFlip = false;
+      let startX = 0;
+      let startY = 0;
+      let initialRotY = 0;
+      let initialRotX = 0;
+      let dragDistance = 0;
 
-      // CONTINUOUS ENGINE & SAFARI OVERLAP ELIMINATION
-      function engineTick() {
-        // Smooth lerp easing
-        currentTiltX += (targetTiltX - currentTiltX) * 0.14;
-        currentTiltY += (targetTiltY - currentTiltY) * 0.14;
-
-        const totalRotY = baseAngleY + currentTiltY;
-        const totalRotX = currentTiltX;
-
-        cardAnchor.style.transform = `rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg)`;
-
-        // Safari WebKit Z-fighting & Bleedthrough Fix:
-        // Compute which side of the card is facing the user in degrees (0-360)
-        let normalizedAngle = ((totalRotY % 360) + 360) % 360;
-        let isFrontSideFacing = (normalizedAngle >= 270 || normalizedAngle <= 90);
-
-        if (isFrontSideFacing) {
-          frontFace.style.visibility = 'visible';
-          frontFace.style.opacity = '1';
-          backFace.style.visibility = 'hidden';
-          backFace.style.opacity = '0';
-        } else {
-          frontFace.style.visibility = 'hidden';
-          frontFace.style.opacity = '0';
-          backFace.style.visibility = 'visible';
-          backFace.style.opacity = '1';
-        }
-
-        requestAnimationFrame(engineTick);
+      // Card rendering loop
+      function updateTransform() {
+        card.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
       }
-      requestAnimationFrame(engineTick);
 
-      // Desktop: 360 Mirror Follow
-      window.addEventListener('mousemove', (e) => {
-        const normX = (e.clientX / window.innerWidth) - 0.5;
-        const normY = (e.clientY / window.innerHeight) - 0.5;
+      function lerp(start, end, factor) {
+        return start + (end - start) * factor;
+      }
 
-        targetTiltX = -normY * 26;
-        targetTiltY = normX * 36;
+      function renderLoop() {
+        if (isAnimatingFlip) {
+          rotY = lerp(rotY, targetRotY, 0.1);
+          rotX = lerp(rotX, targetRotX, 0.1);
+          
+          if (Math.abs(rotY - targetRotY) < 0.05 && Math.abs(rotX - targetRotX) < 0.05) {
+            rotY = targetRotY;
+            rotX = targetRotX;
+            isAnimatingFlip = false;
+          }
+          updateTransform();
+        }
+        requestAnimationFrame(renderLoop);
+      }
+      requestAnimationFrame(renderLoop);
 
-        ambientSpotlight.style.left = `${e.clientX}px`;
-        ambientSpotlight.style.top = `${e.clientY}px`;
+      // Unified Pointer Events (Touch, Mouse, Pen)
+      scene.addEventListener('pointerdown', (e) => {
+        if (e.button === 2) return; // Ignore right-click on pointerdown
+        isDragging = true;
+        isAnimatingFlip = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialRotY = rotY;
+        initialRotX = rotX;
+        dragDistance = 0;
+        scene.setPointerCapture(e.pointerId);
       });
 
-      window.addEventListener('mouseleave', () => {
-        targetTiltX = 0;
-        targetTiltY = 0;
+      scene.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        dragDistance = Math.hypot(deltaX, deltaY);
+
+        // Direct 1:1 natural rotation tracking
+        rotY = initialRotY + deltaX * 0.65;
+        rotX = Math.max(-60, Math.min(60, initialRotX - deltaY * 0.45));
+        
+        targetRotY = rotY;
+        targetRotX = rotX;
+        updateTransform();
       });
+
+      function onPointerEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        try {
+          scene.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+
+        // If drag was essentially zero, treat as single tap -> smooth 180° flip
+        if (dragDistance < 7) {
+          trigger180Flip();
+        }
+        // If it was a drag, card permanently freezes exactly where finger was lifted!
+      }
+
+      scene.addEventListener('pointerup', onPointerEnd);
+      scene.addEventListener('pointercancel', onPointerEnd);
 
       // Desktop Right-Click Flip
       window.addEventListener('contextmenu', (e) => {
-        if (!pdfModal.classList.contains('is-active')) {
-          e.preventDefault();
-          baseAngleY = (baseAngleY === 0) ? 180 : 0;
-        }
+        e.preventDefault();
+        trigger180Flip();
       });
 
-      // REAL-TIME FINGER TRACKING PHYSICS (iPad & Mobile)
-      let touchActive = false;
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let dragDeltaX = 0;
-
-      cardAnchor.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          touchActive = true;
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-          dragDeltaX = 0;
+      function trigger180Flip() {
+        isAnimatingFlip = true;
+        // Determine whether to snap towards nearest 180° interval
+        const currentRot = targetRotY;
+        const remainder = Math.round(currentRot / 180) * 180;
+        
+        // If already flat on one side, rotate forward 180°
+        if (Math.abs(currentRot - remainder) < 15) {
+          targetRotY = remainder + 180;
+        } else {
+          targetRotY = remainder;
         }
-      }, { passive: true });
-
-      window.addEventListener('touchmove', (e) => {
-        if (!touchActive || e.touches.length !== 1) return;
-
-        const currentX = e.touches[0].clientX;
-        const currentY = e.touches[0].clientY;
-
-        const deltaX = currentX - touchStartX;
-        const deltaY = currentY - touchStartY;
-        dragDeltaX = deltaX;
-
-        // Dynamic Real-Time Finger Drag: Card rotates dynamically with the finger gesture
-        targetTiltY = deltaX * 0.48;
-        targetTiltX = -deltaY * 0.22;
-
-        ambientSpotlight.style.left = `${currentX}px`;
-        ambientSpotlight.style.top = `${currentY}px`;
-      }, { passive: true });
-
-      window.addEventListener('touchend', () => {
-        if (!touchActive) return;
-        touchActive = false;
-
-        // Swipe threshold: 45px drag triggers snap to opposite face
-        if (Math.abs(dragDeltaX) > 45) {
-          if (dragDeltaX < 0) {
-            // Swiped left
-            baseAngleY = (baseAngleY === 0) ? 180 : 0;
-          } else {
-            // Swiped right
-            baseAngleY = (baseAngleY === 180) ? 0 : 180;
-          }
-        }
-
-        // Return tilt back smoothly
-        targetTiltX = 0;
-        targetTiltY = 0;
-      });
-
-      // Direct tap fallback for instant flip
-      cardAnchor.addEventListener('click', () => {
-        if (Math.abs(dragDeltaX) < 10) {
-          baseAngleY = (baseAngleY === 0) ? 180 : 0;
-        }
-      });
-
-      // MODAL CONTROLS & PDF LOADING
-      function openModal() {
-        if (pdfFrame.getAttribute('src') === 'about:blank') {
-          pdfFrame.setAttribute('src', 'document.pdf#toolbar=1&navpanes=1');
-        }
-        pdfModal.classList.add('is-active');
-        pdfModal.setAttribute('aria-hidden', 'false');
+        targetRotX = 0; // Return tilt to level on tap
       }
 
-      function closeModal() {
-        pdfModal.classList.remove('is-active');
-        pdfModal.setAttribute('aria-hidden', 'true');
-      }
-
-      filesBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openModal();
+      // Files Modal Trigger Logic
+      filesBtn.addEventListener('click', () => {
+        modalBackdrop.classList.add('open');
       });
 
-      closeModalBtn.addEventListener('click', closeModal);
+      closeBtn.addEventListener('click', () => {
+        modalBackdrop.classList.remove('open');
+      });
 
-      pdfModal.addEventListener('click', (e) => {
-        if (e.target === pdfModal) {
-          closeModal();
+      modalBackdrop.addEventListener('click', (e) => {
+        if (!modalPanel.contains(e.target)) {
+          modalBackdrop.classList.remove('open');
         }
       });
 
+      // Escape key to close modal
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && pdfModal.classList.contains('is-active')) {
-          closeModal();
+        if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) {
+          modalBackdrop.classList.remove('open');
         }
       });
-
     })();
   </script>
 </body>
