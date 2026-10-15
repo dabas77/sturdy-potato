@@ -102,8 +102,8 @@
         0 25px 60px rgba(0, 0, 0, 0.85),
         0 0 20px rgba(229, 196, 139, 0.08),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(0deg) translateZ(1px);
-      -webkit-transform: rotateY(0deg) translateZ(1px);
+      transform: rotateY(0deg) translateZ(1.5px);
+      -webkit-transform: rotateY(0deg) translateZ(1.5px);
     }
 
     /* Back side - Platinum Silver hairline */
@@ -113,8 +113,8 @@
         0 25px 60px rgba(0, 0, 0, 0.85),
         0 0 20px rgba(209, 216, 227, 0.08),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transform: rotateY(180deg) translateZ(1px);
-      -webkit-transform: rotateY(180deg) translateZ(1px);
+      transform: rotateY(180deg) translateZ(1.5px);
+      -webkit-transform: rotateY(180deg) translateZ(1.5px);
     }
 
     .name {
@@ -197,13 +197,13 @@
     /* Floating Files Button (Bottom-Right) */
     .files-btn {
       position: fixed;
-      bottom: calc(36px + env(safe-area-inset-bottom));
-      right: calc(36px + env(safe-area-inset-right));
+      bottom: calc(34px + env(safe-area-inset-bottom));
+      right: calc(34px + env(safe-area-inset-right));
       z-index: 100;
       display: inline-flex;
       align-items: center;
       gap: 9px;
-      padding: 12px 24px;
+      padding: 12px 22px;
       background: linear-gradient(135deg, var(--btn-bg-start), var(--btn-bg-end));
       border: 1px solid var(--border-btn);
       border-radius: 999px;
@@ -216,21 +216,16 @@
         0 12px 30px rgba(0, 0, 0, 0.6),
         0 0 15px rgba(255, 255, 255, 0.04),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
       touch-action: manipulation;
     }
 
     .files-btn:hover {
-      transform: scale(1.05) translateY(-2px);
+      transform: scale(1.04) translateY(-2px);
       box-shadow: 
         0 16px 36px rgba(0, 0, 0, 0.75),
-        0 0 20px rgba(220, 185, 125, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 0 20px rgba(220, 185, 125, 0.2);
       border-color: rgba(220, 185, 125, 0.4);
-    }
-
-    .files-btn:active {
-      transform: scale(0.97);
     }
 
     .files-btn svg {
@@ -243,13 +238,13 @@
       stroke-linejoin: round;
     }
 
-    /* Files Modal / Drawer */
+    /* Files Modal / List Drawer */
     .modal-backdrop {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(4, 5, 8, 0.75);
+      background: rgba(4, 5, 8, 0.8);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 200;
@@ -275,7 +270,7 @@
       border-radius: 20px;
       padding: 24px;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transform: scale(0.94) translateY(12px);
+      transform: scale(0.95) translateY(12px);
       transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
@@ -287,17 +282,22 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 8px;
     }
 
     .modal-title {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
-      letter-spacing: -0.2px;
       color: #ffffff;
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 20px;
     }
 
     .close-btn {
@@ -312,13 +312,12 @@
       color: #aeb4c0;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     .close-btn:hover {
       background: rgba(255, 255, 255, 0.15);
       color: #ffffff;
-      transform: scale(1.05);
     }
 
     .file-list {
@@ -327,7 +326,6 @@
       gap: 12px;
     }
 
-    /* Document Item Link */
     .file-item {
       display: flex;
       align-items: center;
@@ -343,7 +341,7 @@
 
     .file-item:hover {
       background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(220, 185, 125, 0.35);
+      border-color: rgba(220, 185, 125, 0.4);
       transform: translateY(-1px);
     }
 
@@ -426,18 +424,20 @@
     Files
   </button>
 
-  <!-- In-Site Files Drawer Modal -->
+  <!-- In-Site Files List Modal -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-panel" id="modalPanel">
       <div class="modal-header">
         <div class="modal-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-gold)"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-          Documents
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-gold)"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          Select Document
         </div>
         <button class="close-btn" id="closeBtn" aria-label="Close">✕</button>
       </div>
+      <div class="modal-subtitle">Choose a file to view full document:</div>
+
       <div class="file-list">
-        <!-- Opens full multi-page PDF natively in new tab -->
+        <!-- Document 1: Main Project Document -->
         <a href="document.pdf" target="_blank" rel="noopener noreferrer" class="file-item">
           <div class="file-info">
             <div class="file-icon">
@@ -445,7 +445,7 @@
             </div>
             <div>
               <div class="file-name">document.pdf</div>
-              <div class="file-meta">Project Document • Full View</div>
+              <div class="file-meta">Project Document • 38 Pages</div>
             </div>
           </div>
           <div class="open-tag">
@@ -465,112 +465,105 @@
       const modalPanel = document.getElementById('modalPanel');
       const closeBtn = document.getElementById('closeBtn');
 
-      // State Management
-      let rotY = 0;
-      let rotX = 0;
+      let currentRotY = 0;
+      let currentRotX = 0;
       let targetRotY = 0;
       let targetRotX = 0;
       
       let isDragging = false;
-      let isAnimatingFlip = false;
+      let isAnimating = false;
       let startX = 0;
       let startY = 0;
-      let initialRotY = 0;
-      let initialRotX = 0;
-      let dragDistance = 0;
+      let startRotY = 0;
+      let startRotX = 0;
+      let totalDistance = 0;
 
-      // Card rendering loop
-      function updateTransform() {
-        card.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+      function updateCardTransform() {
+        card.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
       }
 
       function lerp(start, end, factor) {
         return start + (end - start) * factor;
       }
 
-      function renderLoop() {
-        if (isAnimatingFlip) {
-          rotY = lerp(rotY, targetRotY, 0.1);
-          rotX = lerp(rotX, targetRotX, 0.1);
-          
-          if (Math.abs(rotY - targetRotY) < 0.05 && Math.abs(rotX - targetRotX) < 0.05) {
-            rotY = targetRotY;
-            rotX = targetRotX;
-            isAnimatingFlip = false;
-          }
-          updateTransform();
-        }
-        requestAnimationFrame(renderLoop);
-      }
-      requestAnimationFrame(renderLoop);
+      function animationLoop() {
+        if (isAnimating) {
+          currentRotY = lerp(currentRotY, targetRotY, 0.12);
+          currentRotX = lerp(currentRotX, targetRotX, 0.12);
 
-      // Unified Pointer Events (Touch, Mouse, Pen)
+          if (Math.abs(currentRotY - targetRotY) < 0.05 && Math.abs(currentRotX - targetRotX) < 0.05) {
+            currentRotY = targetRotY;
+            currentRotX = targetRotX;
+            isAnimating = false;
+          }
+          updateCardTransform();
+        }
+        requestAnimationFrame(animationLoop);
+      }
+      requestAnimationFrame(animationLoop);
+
+      // Free-angle gesture handler
       scene.addEventListener('pointerdown', (e) => {
-        if (e.button === 2) return; // Ignore right-click on pointerdown
+        if (e.button === 2) return;
         isDragging = true;
-        isAnimatingFlip = false;
+        isAnimating = false;
         startX = e.clientX;
         startY = e.clientY;
-        initialRotY = rotY;
-        initialRotX = rotX;
-        dragDistance = 0;
+        startRotY = currentRotY;
+        startRotX = currentRotX;
+        totalDistance = 0;
         scene.setPointerCapture(e.pointerId);
       });
 
       scene.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
-        const deltaX = e.clientX - startX;
-        const deltaY = e.clientY - startY;
-        dragDistance = Math.hypot(deltaX, deltaY);
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        totalDistance = Math.hypot(dx, dy);
 
-        // Direct 1:1 natural rotation tracking
-        rotY = initialRotY + deltaX * 0.65;
-        rotX = Math.max(-60, Math.min(60, initialRotX - deltaY * 0.45));
+        // Real-time tracking
+        currentRotY = startRotY + dx * 0.65;
+        currentRotX = Math.max(-65, Math.min(65, startRotX - dy * 0.45));
         
-        targetRotY = rotY;
-        targetRotX = rotX;
-        updateTransform();
+        targetRotY = currentRotY;
+        targetRotX = currentRotX;
+        updateCardTransform();
       });
 
-      function onPointerEnd(e) {
+      function finishPointer(e) {
         if (!isDragging) return;
         isDragging = false;
         try {
           scene.releasePointerCapture(e.pointerId);
         } catch (_) {}
 
-        // If drag was essentially zero, treat as single tap -> smooth 180° flip
-        if (dragDistance < 7) {
-          trigger180Flip();
+        // Tap detected (no drag) -> smooth 180° flip
+        if (totalDistance < 7) {
+          isAnimating = true;
+          const nearest180 = Math.round(targetRotY / 180) * 180;
+          if (Math.abs(targetRotY - nearest180) < 15) {
+            targetRotY = nearest180 + 180;
+          } else {
+            targetRotY = nearest180;
+          }
+          targetRotX = 0;
         }
-        // If it was a drag, card permanently freezes exactly where finger was lifted!
+        // If dragged, card stays at the exact angle where released
       }
 
-      scene.addEventListener('pointerup', onPointerEnd);
-      scene.addEventListener('pointercancel', onPointerEnd);
+      scene.addEventListener('pointerup', finishPointer);
+      scene.addEventListener('pointercancel', finishPointer);
 
       // Desktop Right-Click Flip
       window.addEventListener('contextmenu', (e) => {
         e.preventDefault();
-        trigger180Flip();
+        isAnimating = true;
+        const nearest180 = Math.round(targetRotY / 180) * 180;
+        targetRotY = nearest180 + 180;
+        targetRotX = 0;
       });
 
-      function trigger180Flip() {
-        isAnimatingFlip = true;
-        // Determine whether to snap towards nearest 180° interval
-        const currentRot = targetRotY;
-        const remainder = Math.round(currentRot / 180) * 180;
-        
-        // If already flat on one side, rotate forward 180°
-        if (Math.abs(currentRot - remainder) < 15) {
-          targetRotY = remainder + 180;
-        } else {
-          targetRotY = remainder;
-        }
-        targetRotX = 0; // Return tilt to level on tap
-      }
-
-      // Files Modal Trigger Logic
+      // Modal Controls
       filesBtn.addEventListener('click', () => {
         modalBackdrop.classList.add('open');
       });
@@ -585,7 +578,6 @@
         }
       });
 
-      // Escape key to close modal
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) {
           modalBackdrop.classList.remove('open');
