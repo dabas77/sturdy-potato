@@ -1,931 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>VAULT 77 // Dual Portfolio & Resource Node</title>
-
-  <!-- Typography -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Portfolio | Vansh Dabas &amp; Priyanshu Sehrawat</title>
+  
+  <!-- Inter font for executive minimalist typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
-    /* =========================================================
-       DESIGN TOKENS & CYBERPUNK PALETTE
-       ========================================================= */
-    :root {
-      --bg-dark: #06080e;
-      --surface-glass: rgba(13, 19, 33, 0.75);
-      --surface-border: rgba(255, 255, 255, 0.09);
-      --surface-hover: rgba(255, 255, 255, 0.05);
-
-      --cyan: #38bdf8;
-      --cyan-glow: rgba(56, 189, 248, 0.28);
-      --purple: #c084fc;
-      --purple-glow: rgba(192, 132, 252, 0.28);
-      --emerald: #10b981;
-      --amber: #f59e0b;
-      --rose: #f43f5e;
-
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-
-      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-      --radius-xl: 22px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
-    }
-
+    /* Reset & Base Ambiance */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-font-smoothing: antialiased;
       user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-sans);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 24px 16px 40px;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* Ambient Lighting Mesh */
-    .glow-ball-cyan {
-      position: fixed;
-      top: 10%;
-      left: 10%;
-      width: 440px;
-      height: 440px;
-      background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .glow-ball-purple {
-      position: fixed;
-      bottom: 10%;
-      right: 10%;
-      width: 480px;
-      height: 480px;
-      background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* =========================================================
-       NAVIGATION & TOP DOCK
-       ========================================================= */
-    .app-header {
-      width: 100%;
-      max-width: 500px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--surface-border);
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      backdrop-filter: blur(12px);
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--emerald);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--emerald);
-      animation: pulse 2s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    .action-tools {
-      display: flex;
-      gap: 8px;
-    }
-
-    .tool-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--surface-border);
-      color: var(--text-main);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .tool-btn:hover {
-      background: rgba(255, 255, 255, 0.09);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .tool-btn.primary {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(192, 132, 252, 0.25));
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Titles & Instructions */
-    .branding {
-      text-align: center;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .branding h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.8px;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .gesture-hint {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      margin-top: 4px;
+      width: 100vw;
+      background: #060709;
+      background: radial-gradient(circle at 50% 50%, #15181f 0%, #0a0b0e 45%, #040507 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #f1f3f7;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      perspective: 1400px;
     }
 
-    .gesture-hint span {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--surface-border);
-      padding: 2px 7px;
-      border-radius: 4px;
-      color: var(--text-muted);
+    /* Ambient Spotlight Depth Layer */
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(229, 228, 226, 0.03) 40%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.5s ease;
     }
 
-    /* =========================================================
-       3D PARALLAX & FLIP VIEWPORT
-       ========================================================= */
-    .viewport-3d {
-      width: 100%;
-      max-width: 470px;
-      height: 670px;
-      perspective: 1500px;
-      position: relative;
-      z-index: 10;
-      touch-action: pan-y;
-    }
-
-    /* Outer Wrapper handles Dynamic Mouse Move Tilting */
-    .tilt-wrapper {
+    /* 3D Scene Wrapper */
+    .scene {
       width: 100%;
       height: 100%;
-      transform-style: preserve-3d;
-      will-change: transform;
-      transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
     }
 
-    /* Inner Box handles the 180° Flip */
-    .card-box {
-      width: 100%;
-      height: 100%;
+    /* Standard Playing Card Ratio: 2.5 x 3.5 (~1:1.4) */
+    .card-wrapper {
+      width: 320px;
+      height: 448px;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      cursor: grab;
+      touch-action: pan-y pinch-zoom;
     }
 
-    .card-box.flipped {
+    .card-wrapper:active {
+      cursor: grabbing;
+    }
+
+    /* Internal Flip Core */
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .card-flipper.is-flipped {
       transform: rotateY(180deg);
     }
 
-    /* Shared Card Face Styling */
+    /* Card Faces (Matte Obsidian Body) */
     .card-face {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      background: var(--surface-glass);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius-xl);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      border-radius: 20px;
+      background: #0d0e12;
+      background: linear-gradient(145deg, #121319 0%, #0a0b0e 100%);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.85),
+        0 0 35px rgba(0, 0, 0, 0.6);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      transform: rotateY(0deg);
-    }
-
-    .face-front {
-      border-top: 2px solid var(--cyan);
-    }
-
-    .face-back {
-      transform: rotateY(180deg);
-      border-top: 2px solid var(--purple);
-    }
-
-    /* Profile Header */
-    .profile-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--surface-border);
-    }
-
-    .identity-pack {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      font-size: 1.35rem;
-      font-weight: 800;
-      font-family: var(--font-mono);
+      padding: 42px 34px;
+      overflow: hidden;
+    }
+
+    /* Subtle hairline metallic borders */
+    .card-face.front {
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.9),
+        inset 0 0 1px 1px rgba(212, 175, 55, 0.25),
+        0 0 25px rgba(212, 175, 55, 0.08);
+    }
+
+    .card-face.back {
+      transform: rotateY(180deg);
+      border: 1px solid rgba(229, 228, 226, 0.45);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.9),
+        inset 0 0 1px 1px rgba(229, 228, 226, 0.25),
+        0 0 25px rgba(229, 228, 226, 0.08);
+    }
+
+    /* Dynamic sheen reflection on card movement */
+    .card-sheen {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.04) 45%, transparent 60%);
+      opacity: 0.6;
+    }
+
+    /* Content Layout & Hierarchy */
+    .profile-info {
       position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .avatar.cyan {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--cyan);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      box-shadow: 0 0 16px var(--cyan-glow);
+    .name-heading {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
     }
 
-    .avatar.purple {
-      background: rgba(192, 132, 252, 0.15);
-      color: var(--purple);
-      border: 1px solid rgba(192, 132, 252, 0.35);
-      box-shadow: 0 0 16px var(--purple-glow);
+    .card-face.front .name-heading {
+      color: #f7eed8;
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
     }
 
-    .identity-texts h2 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      letter-spacing: -0.3px;
+    .card-face.back .name-heading {
+      color: #f2f4f7;
+      text-shadow: 0 0 15px rgba(229, 228, 226, 0.15);
     }
 
-    .academic-pill {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 600;
-      font-family: var(--font-mono);
-      color: var(--cyan);
-      background: rgba(56, 189, 248, 0.1);
-      padding: 2px 8px;
-      border-radius: 4px;
+    .class-label {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      opacity: 0.85;
+      text-transform: uppercase;
+    }
+
+    .card-face.front .class-label {
+      color: #dfcaa2;
+    }
+
+    .card-face.back .class-label {
+      color: #b0b4bd;
+    }
+
+    .divider {
+      width: 44px;
+      height: 1.5px;
+      border-radius: 2px;
+      margin: 4px 0 6px 0;
+    }
+
+    .card-face.front .divider {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.7), transparent);
+    }
+
+    .card-face.back .divider {
+      background: linear-gradient(90deg, rgba(229, 228, 226, 0.7), transparent);
+    }
+
+    .hobbies-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       margin-top: 4px;
     }
 
-    .face-back .academic-pill {
-      color: var(--purple);
-      background: rgba(192, 132, 252, 0.1);
-    }
-
-    .node-tag {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      padding: 4px 8px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--surface-border);
-      color: var(--text-muted);
-    }
-
-    /* Hobbies Section */
-    .hobbies-section {
-      margin: 14px 0 10px;
-    }
-
-    .section-title {
-      font-size: 0.65rem;
-      font-family: var(--font-mono);
-      color: var(--text-dim);
+    .hobbies-heading {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 8px;
+      opacity: 0.9;
     }
 
-    .hobbies-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+    .card-face.front .hobbies-heading {
+      color: #ecd5a7;
     }
 
-    .hobby-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius-sm);
-      padding: 8px 6px;
-      text-align: center;
-      transition: all 0.2s;
+    .card-face.back .hobbies-heading {
+      color: #d1d5dc;
     }
 
-    .hobby-card:hover {
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.18);
-    }
-
-    .hobby-icon {
-      font-size: 1.1rem;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .hobby-title {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text-bright);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Repository / Files Segment */
-    .files-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 10px 0 8px;
-    }
-
-    .file-stream {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
+    .hobbies-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 7px;
-      max-height: 250px;
+      gap: 8px;
     }
 
-    .file-stream::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .file-stream::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 999px;
-    }
-
-    .file-item-row {
+    .hobbies-list li {
+      font-size: 14px;
+      font-weight: 400;
+      color: #a4a8b2;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 10px 12px;
-      border-radius: var(--radius-md);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
+      gap: 10px;
+      letter-spacing: 0.01em;
     }
 
-    .file-item-row:hover {
-      background: rgba(255, 255, 255, 0.07);
-      border-color: rgba(255, 255, 255, 0.18);
-      transform: translateX(4px);
-    }
-
-    .file-meta-cluster {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .file-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.65rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
+    .bullet-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
       flex-shrink: 0;
     }
 
-    .badge-pdf { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-    .badge-doc { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .badge-zip { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
-
-    .file-info-text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
+    .card-face.front .bullet-dot {
+      background: #c9ab67;
+      box-shadow: 0 0 6px rgba(201, 171, 103, 0.6);
     }
 
-    .file-name {
-      font-size: 0.8rem;
+    .card-face.back .bullet-dot {
+      background: #adb2bd;
+      box-shadow: 0 0 6px rgba(173, 178, 189, 0.6);
+    }
+
+    /* Floating "Files" Button (Bottom-Left) */
+    .files-button {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 100;
+      background: rgba(14, 15, 20, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f1f3f7;
+      font-family: inherit;
+      font-size: 13.5px;
       font-weight: 600;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .file-desc-text {
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      margin-top: 2px;
-    }
-
-    .row-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .icon-action-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-dim);
-      padding: 5px;
-      border-radius: 4px;
+      letter-spacing: 0.04em;
+      padding: 12px 24px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.15s;
-    }
-
-    .icon-action-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /* Flip Controller Trigger */
-    .card-footer-controls {
-      margin-top: 14px;
-    }
-
-    .flip-btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: var(--radius-md);
-      border: none;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 9px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.65);
+      transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      outline: none;
     }
 
-    .flip-btn:active {
-      transform: scale(0.98);
+    .files-button svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.85;
+      transition: transform 0.3s ease;
     }
 
-    .btn-cyan {
-      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
-      color: #031320;
-      box-shadow: 0 4px 20px var(--cyan-glow);
+    .files-button:hover {
+      transform: translateY(-3px) scale(1.05);
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(20, 22, 30, 0.9);
+      box-shadow: 
+        0 15px 30px -5px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(255, 255, 255, 0.08);
+      color: #ffffff;
     }
 
-    .btn-cyan:hover {
-      box-shadow: 0 6px 26px rgba(56, 189, 248, 0.45);
+    .files-button:hover svg {
+      transform: translateY(-1px);
     }
 
-    .btn-purple {
-      background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
-      color: #1a0426;
-      box-shadow: 0 4px 20px var(--purple-glow);
+    .files-button:active {
+      transform: translateY(0) scale(0.98);
     }
 
-    .btn-purple:hover {
-      box-shadow: 0 6px 26px rgba(192, 132, 252, 0.45);
-    }
-
-    /* =========================================================
-       MODALS: UPLOAD & PREVIEW
-       ========================================================= */
-    .modal-overlay {
+    /* In-Site Glassmorphic Modal */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(14px);
-      z-index: 100;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 5, 8, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
+      padding: 24px;
     }
 
-    .modal-overlay.open {
+    .modal-backdrop.active {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .modal-box {
-      background: #0d1321;
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius-xl);
+    .modal-container {
       width: 100%;
-      max-width: 460px;
-      padding: 24px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.95);
-      transform: translateY(20px);
-      transition: transform 0.25s ease;
-      position: relative;
+      max-width: 980px;
+      height: 86vh;
+      background: #0d0f14;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      box-shadow: 
+        0 30px 60px -15px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(0, 0, 0, 0.75);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.96) translateY(12px);
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
     }
 
-    .modal-overlay.open .modal-box {
-      transform: translateY(0);
+    .modal-backdrop.active .modal-container {
+      transform: scale(1) translateY(0);
     }
 
-    .modal-head {
+    /* Modal Topbar */
+    .modal-header {
+      height: 52px;
+      background: rgba(18, 20, 26, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      padding: 0 20px;
     }
 
-    .modal-head h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
+    .modal-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #9da3af;
+      text-transform: uppercase;
     }
 
     .close-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--surface-border);
-      color: var(--text-muted);
       width: 32px;
       height: 32px;
-      border-radius: 50%;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
+      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-    }
-
-    /* Upload Form Elements */
-    .dropzone-area {
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: var(--radius-md);
-      padding: 28px 16px;
-      text-align: center;
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0.25);
-      transition: all 0.2s;
-      margin-bottom: 16px;
-    }
-
-    .dropzone-area.dragover {
-      border-color: var(--cyan);
-      background: rgba(56, 189, 248, 0.05);
-    }
-
-    .drop-icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
-      color: var(--text-dim);
-      margin-bottom: 6px;
-    }
-
-    .form-input, .form-select {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid var(--surface-border);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
-      color: var(--text-main);
-      font-size: 0.85rem;
+      transition: all 0.2s ease;
       outline: none;
-      font-family: var(--font-sans);
     }
 
-    .form-input:focus, .form-select:focus {
-      border-color: var(--cyan);
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      transform: scale(1.05);
     }
 
-    .form-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
+    .close-btn:active {
+      transform: scale(0.95);
     }
 
-    .submit-upload-btn {
+    /* PDF Frame Viewport */
+    .pdf-frame-wrapper {
       flex: 1;
-      padding: 12px;
+      width: 100%;
+      height: 100%;
+      background: #08090c;
+    }
+
+    .pdf-frame {
+      width: 100%;
+      height: 100%;
       border: none;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
-      color: #02111d;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
+      display: block;
     }
 
-    /* Toast Notification */
-    .toast-pill {
-      position: fixed;
-      bottom: 24px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-main);
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-family: var(--font-mono);
-      z-index: 120;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-      pointer-events: none;
-    }
+    /* Mobile Responsiveness */
+    @media (max-width: 480px) {
+      .card-wrapper {
+        width: 285px;
+        height: 400px;
+      }
 
-    .toast-pill.show {
-      opacity: 1;
-      transform: translateY(0);
+      .card-face {
+        padding: 34px 26px;
+      }
+
+      .name-heading {
+        font-size: 22px;
+      }
+
+      .class-label {
+        font-size: 13.5px;
+      }
+
+      .files-button {
+        bottom: 20px;
+        left: 20px;
+        padding: 11px 20px;
+        font-size: 13px;
+      }
+
+      .modal-backdrop {
+        padding: 10px;
+      }
+
+      .modal-container {
+        height: 92vh;
+        border-radius: 14px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Light Backdrops -->
-  <div class="glow-ball-cyan"></div>
-  <div class="glow-ball-purple"></div>
+  <!-- Dynamic ambient spotlight glow -->
+  <div class="ambient-glow" id="ambientGlow"></div>
 
-  <!-- Header & Controls -->
-  <header class="app-header">
-    <div class="status-badge">
-      <div class="pulse-dot"></div>
-      <span>VAULT 77 // ACTIVE</span>
-    </div>
-
-    <div class="action-tools">
-      <button class="tool-btn primary" onclick="openUploadModal()">
-        <span>+ Upload File</span>
-      </button>
-    </div>
-  </header>
-
-  <div class="branding">
-    <h1>Vault77 Portal</h1>
-    <div class="gesture-hint">
-      <span>🖱 Move Mouse: 3D Tilt</span>
-      <span>🖱 Right-Click / Swipe: Flip Card</span>
-    </div>
-  </div>
-
-  <!-- 3D Parallax & Flip Viewport -->
-  <main class="viewport-3d" id="viewportArea">
-    <div class="tilt-wrapper" id="tiltWrapper">
-      <div class="card-box" id="cardFlipper">
-
-        <!-- ==============================================
-             CARD 1: VANSH DABAS (11TH HUMANITIES)
-             ============================================== -->
-        <section class="card-face face-front" id="cardVansh">
-          <div>
-            <!-- Identity Header -->
-            <div class="profile-row">
-              <div class="identity-pack">
-                <div class="avatar cyan">V</div>
-                <div class="identity-texts">
-                  <h2>Vansh Dabas</h2>
-                  <span class="academic-pill">11th Humanities</span>
-                </div>
-              </div>
-              <div class="node-tag">NODE 0x77A</div>
-            </div>
-
-            <!-- 3 Hobbies Section -->
+  <!-- 3D Card Scene -->
+  <main class="scene" id="sceneContainer">
+    <div class="card-wrapper" id="cardWrapper">
+      <div class="card-flipper" id="cardFlipper">
+        
+        <!-- Front Face: Vansh Dabas -->
+        <section class="card-face front" aria-label="Profile of Vansh Dabas">
+          <div class="card-sheen"></div>
+          <div class="profile-info">
+            <h1 class="name-heading">Vansh Dabas</h1>
+            <p class="class-label">11th Humanities</p>
+            <div class="divider"></div>
+            
             <div class="hobbies-section">
-              <div class="section-title">Areas of Interest & Hobbies</div>
-              <div class="hobbies-grid">
-                <div class="hobby-card">
-                  <span class="hobby-icon">🌐</span>
-                  <div class="hobby-title">Geopolitics & MUNs</div>
-                </div>
-                <div class="hobby-card">
-                  <span class="hobby-icon">🎬</span>
-                  <div class="hobby-title">Creative Direction</div>
-                </div>
-                <div class="hobby-card">
-                  <span class="hobby-icon">♟️</span>
-                  <div class="hobby-title">Strategic Chess</div>
-                </div>
-              </div>
+              <h2 class="hobbies-heading">Hobbies</h2>
+              <ul class="hobbies-list">
+                <li><span class="bullet-dot"></span>Gaming</li>
+                <li><span class="bullet-dot"></span>Watching movies</li>
+                <li><span class="bullet-dot"></span>Tech</li>
+              </ul>
             </div>
-
-            <!-- File Repository List -->
-            <div class="files-header">
-              <div class="section-title">Vansh's Repository & Dossiers</div>
-              <span class="section-title" id="vanshCount">3 FILES</span>
-            </div>
-
-            <div class="file-stream" id="vanshFileList">
-              <!-- Default Repo Item 1: Link your uploaded files here -->
-              <div class="file-item-row" onclick="openFileViewer('Political_Science_Theory.pdf', 'notes.pdf', 'PDF', '3.8 MB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-pdf">PDF</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Political_Science_Theory.pdf</div>
-                    <div class="file-desc-text">3.8 MB • Chapter Synthesis & Notes</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, 'notes.pdf')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-
-              <!-- Default Repo Item 2 -->
-              <div class="file-item-row" onclick="openFileViewer('Economics_Project_Report.docx', '#', 'DOC', '1.2 MB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-doc">DOC</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Economics_Project_Report.docx</div>
-                    <div class="file-desc-text">1.2 MB • Macro Development Dossier</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, '#')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-
-              <!-- Default Repo Item 3 -->
-              <div class="file-item-row" onclick="openFileViewer('Creative_Portfolio_Assets.zip', '#', 'ZIP', '24.5 MB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-zip">ZIP</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Creative_Portfolio_Assets.zip</div>
-                    <div class="file-desc-text">24.5 MB • Design Renders & Fonts</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, '#')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Switch Trigger -->
-          <div class="card-footer-controls">
-            <button class="flip-btn btn-cyan" onclick="triggerFlip()">
-              <span>Swipe to Priyanshu Sehrawat</span>
-              <span>➔</span>
-            </button>
           </div>
         </section>
 
-        <!-- ==============================================
-             CARD 2: PRIYANSHU SEHRAWAT (11TH HUMANITIES)
-             ============================================== -->
-        <section class="card-face face-back" id="cardPriyanshu">
-          <div>
-            <!-- Identity Header -->
-            <div class="profile-row">
-              <div class="identity-pack">
-                <div class="avatar purple">P</div>
-                <div class="identity-texts">
-                  <h2>Priyanshu Sehrawat</h2>
-                  <span class="academic-pill">11th Humanities</span>
-                </div>
-              </div>
-              <div class="node-tag">NODE 0x77B</div>
-            </div>
-
-            <!-- 3 Hobbies Section -->
+        <!-- Back Face: Priyanshu Sehrawat -->
+        <section class="card-face back" aria-label="Profile of Priyanshu Sehrawat">
+          <div class="card-sheen"></div>
+          <div class="profile-info">
+            <h1 class="name-heading">Priyanshu Sehrawat</h1>
+            <p class="class-label">11th Humanities</p>
+            <div class="divider"></div>
+            
             <div class="hobbies-section">
-              <div class="section-title">Areas of Interest & Hobbies</div>
-              <div class="hobbies-grid">
-                <div class="hobby-card">
-                  <span class="hobby-icon">📜</span>
-                  <div class="hobby-title">Historical Research</div>
-                </div>
-                <div class="hobby-card">
-                  <span class="hobby-icon">🎥</span>
-                  <div class="hobby-title">Cinematography</div>
-                </div>
-                <div class="hobby-card">
-                  <span class="hobby-icon">⚽</span>
-                  <div class="hobby-title">Football & Fitness</div>
-                </div>
-              </div>
+              <h2 class="hobbies-heading">Hobbies</h2>
+              <ul class="hobbies-list">
+                <li><span class="bullet-dot"></span>Gaming</li>
+                <li><span class="bullet-dot"></span>Football</li>
+                <li><span class="bullet-dot"></span>Music</li>
+              </ul>
             </div>
-
-            <!-- File Repository List -->
-            <div class="files-header">
-              <div class="section-title">Priyanshu's Repository & Dossiers</div>
-              <span class="section-title" id="priyanshuCount">3 FILES</span>
-            </div>
-
-            <div class="file-stream" id="priyanshuFileList">
-              <!-- Default Repo Item 1 -->
-              <div class="file-item-row" onclick="openFileViewer('Humanities_Historical_Survey.pdf', '#', 'PDF', '4.2 MB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-pdf">PDF</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Humanities_Historical_Survey.pdf</div>
-                    <div class="file-desc-text">4.2 MB • Primary Sources & Analysis</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, '#')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-
-              <!-- Default Repo Item 2 -->
-              <div class="file-item-row" onclick="openFileViewer('Sociology_Field_Investigation.docx', '#', 'DOC', '850 KB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-doc">DOC</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Sociology_Field_Investigation.docx</div>
-                    <div class="file-desc-text">850 KB • Field Case Review</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, '#')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-
-              <!-- Default Repo Item 3 -->
-              <div class="file-item-row" onclick="openFileViewer('Cinematography_ShotDeck.zip', '#', 'ZIP', '31.0 MB')">
-                <div class="file-meta-cluster">
-                  <div class="file-badge badge-zip">ZIP</div>
-                  <div class="file-info-text">
-                    <div class="file-name">Cinematography_ShotDeck.zip</div>
-                    <div class="file-desc-text">31.0 MB • Color Grades & B-Roll Cuts</div>
-                  </div>
-                </div>
-                <div class="row-actions">
-                  <button class="icon-action-btn" onclick="copyLink(event, '#')" title="Copy Link">🔗</button>
-                  <span class="icon-action-btn">↗</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom Switch Trigger -->
-          <div class="card-footer-controls">
-            <button class="flip-btn btn-purple" onclick="triggerFlip()">
-              <span>➔ Return to Vansh Dabas</span>
-            </button>
           </div>
         </section>
 
@@ -933,339 +499,179 @@
     </div>
   </main>
 
-  <!-- ==============================================
-       UPLOAD MODAL (LOCAL REPOSITORY INTEGRATION)
-       ============================================== -->
-  <div class="modal-overlay" id="uploadModal" onclick="closeUploadOnBackdrop(event)">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h3>Deploy File to Vault77</h3>
-        <button class="close-btn" onclick="closeUploadModal()">✕</button>
+  <!-- Floating Files Button (Bottom-Left) -->
+  <button class="files-button" id="filesBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open documents viewer">
+    <svg viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+    </svg>
+    <span>Files</span>
+  </button>
+
+  <!-- In-Site PDF Viewer Modal -->
+  <div class="modal-backdrop" id="pdfModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-container">
+      <div class="modal-header">
+        <span class="modal-title">Document Viewer</span>
+        <button class="close-btn" id="closeModalBtn" type="button" aria-label="Close document viewer">✕</button>
       </div>
-
-      <!-- File Picker & Dropzone -->
-      <div class="dropzone-area" id="dropArea" onclick="document.getElementById('fileInputPicker').click()">
-        <span class="drop-icon">📤</span>
-        <div style="font-size: 0.85rem; font-weight: 600;">Choose a file or drag & drop here</div>
-        <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">PDF, DOCX, ZIP, PPTX (Direct Client Ingest)</div>
+      <div class="pdf-frame-wrapper">
+        <iframe class="pdf-frame" id="pdfFrame" src="about:blank" title="Repository PDF Document"></iframe>
       </div>
-      <input type="file" id="fileInputPicker" style="display: none;" onchange="handleFileSelection(event)" />
-
-      <form onsubmit="handleManualUpload(event)">
-        <div class="form-group">
-          <label class="form-label">ASSIGN NODE / REPOSITORY OWNER</label>
-          <select class="form-select" id="uploadOwner">
-            <option value="vansh">Vansh Dabas (Node 0x77A)</option>
-            <option value="priyanshu">Priyanshu Sehrawat (Node 0x77B)</option>
-            <option value="shared">Both Nodes (Shared Vault)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">DOCUMENT NAME</label>
-          <input type="text" class="form-input" id="uploadName" placeholder="e.g. Political_Science_Notes.pdf" required />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">DOCUMENT DESCRIPTION / SIZE</label>
-          <input type="text" class="form-input" id="uploadDesc" placeholder="e.g. 2.4 MB • Complete Revision Pack" required />
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="submit-upload-btn">Add to Repository</button>
-        </div>
-      </form>
     </div>
   </div>
 
-  <!-- Toast Notification Box -->
-  <div class="toast-pill" id="toastNotice">Direct file link copied to clipboard</div>
-
-  <!-- =========================================================
-       ENGINE LOGIC: PARALLAX, TOUCH GESTURES, & REPOSITORY
-       ========================================================= */
-  -->
   <script>
-    /* =========================================================
-       1. 3D FLIP MECHANISM & SOUND SYNTHESIS
-       ========================================================= */
-    const flipper = document.getElementById('cardFlipper');
-    let isFlipped = false;
+    document.addEventListener('DOMContentLoaded', () => {
+      const cardWrapper = document.getElementById('cardWrapper');
+      const cardFlipper = document.getElementById('cardFlipper');
+      const ambientGlow = document.getElementById('ambientGlow');
+      const filesBtn = document.getElementById('filesBtn');
+      const pdfModal = document.getElementById('pdfModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const pdfFrame = document.getElementById('pdfFrame');
 
-    // Web Audio synthesizer for crisp futuristic clicks
-    function playAudioBlip(freq = 600, duration = 0.08) {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+      let isFlipped = false;
+      let targetRotX = 0;
+      let targetRotY = 0;
+      let currentRotX = 0;
+      let currentRotY = 0;
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      // Function to trigger card flip
+      const flipCard = () => {
+        isFlipped = !isFlipped;
+        cardFlipper.classList.toggle('is-flipped', isFlipped);
+      };
 
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + duration);
-      } catch (err) {}
-    }
-
-    function triggerFlip() {
-      isFlipped = !isFlipped;
-      playAudioBlip(isFlipped ? 520 : 780, 0.12);
-      if (isFlipped) {
-        flipper.classList.add('flipped');
-      } else {
-        flipper.classList.remove('flipped');
-      }
-    }
-
-    /* =========================================================
-       2. RIGHT-CLICK TO SWIPE / FLIP
-       ========================================================= */
-    const viewport = document.getElementById('viewportArea');
-
-    viewport.addEventListener('contextmenu', (e) => {
-      // Intercept default browser context menu to trigger our smooth flip
-      e.preventDefault();
-      triggerFlip();
-      showToast(isFlipped ? "Switched to Priyanshu Sehrawat" : "Switched to Vansh Dabas");
-    });
-
-    /* =========================================================
-       3. MOUSE TRACKING DYNAMIC 3D TILT PARALLAX
-       ========================================================= */
-    const tiltWrapper = document.getElementById('tiltWrapper');
-
-    window.addEventListener('mousemove', (e) => {
-      // Only compute if not on a touch device
-      const rect = viewport.getBoundingClientRect();
-      const cardCenterX = rect.left + rect.width / 2;
-      const cardCenterY = rect.top + rect.height / 2;
-
-      // Distance from center of the card
-      const deltaX = (e.clientX - cardCenterX) / (window.innerWidth / 2);
-      const deltaY = (e.clientY - cardCenterY) / (window.innerHeight / 2);
-
-      // Max tilt degrees
-      const maxRotateX = 14;
-      const maxRotateY = 16;
-
-      const rotX = -deltaY * maxRotateX;
-      const rotY = deltaX * maxRotateY;
-
-      tiltWrapper.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateZ(10px)`;
-    });
-
-    viewport.addEventListener('mouseleave', () => {
-      // Return gently to neutral perspective
-      tiltWrapper.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
-    });
-
-    /* =========================================================
-       4. MOBILE / TABLET TOUCH SWIPE DETECTION
-       ========================================================= */
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-
-    viewport.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    viewport.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      handleSwipeGesture();
-    }, { passive: true });
-
-    function handleSwipeGesture() {
-      const diffX = touchEndX - touchStartX;
-      const diffY = touchEndY - touchStartY;
-
-      // Minimum swipe distance threshold (50px) & horizontal priority
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-        // Left or right swipe toggles the flip
-        triggerFlip();
-        showToast(isFlipped ? "Swiped to Priyanshu" : "Swiped to Vansh");
-      }
-    }
-
-    /* =========================================================
-       5. REPOSITORY FILE MANAGEMENT (LOCAL PERSISTENCE)
-       ========================================================= */
-    const STORAGE_KEY = 'vault77_dynamic_files_v1';
-    let fileStore = [];
-
-    function initRepository() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          fileStore = JSON.parse(saved);
-        } catch (e) {
-          fileStore = [];
-        }
-      }
-      renderDynamicFiles();
-    }
-
-    function renderDynamicFiles() {
-      const vanshList = document.getElementById('vanshFileList');
-      const priyanshuList = document.getElementById('priyanshuFileList');
-
-      // Clear existing dynamic rows
-      document.querySelectorAll('.dynamic-uploaded-row').forEach(el => el.remove());
-
-      let vanshCount = 3;
-      let priyanshuCount = 3;
-
-      fileStore.forEach((file, index) => {
-        const row = document.createElement('div');
-        row.className = 'file-item-row dynamic-uploaded-row';
-        row.onclick = () => openFileViewer(file.name, file.url, file.badge, file.desc);
-
-        row.innerHTML = `
-          <div class="file-meta-cluster">
-            <div class="file-badge ${file.badgeClass}">${file.badge}</div>
-            <div class="file-info-text">
-              <div class="file-name">${file.name}</div>
-              <div class="file-desc-text">${file.desc}</div>
-            </div>
-          </div>
-          <div class="row-actions">
-            <button class="icon-action-btn" onclick="copyLink(event, '${file.url}')" title="Copy Link">🔗</button>
-            <button class="icon-action-btn" onclick="deleteFile(event, ${index})" title="Remove">✕</button>
-          </div>
-        `;
-
-        if (file.owner === 'vansh' || file.owner === 'shared') {
-          vanshList.appendChild(row.cloneNode(true));
-          vanshCount++;
-        }
-        if (file.owner === 'priyanshu' || file.owner === 'shared') {
-          priyanshuList.appendChild(row);
-          priyanshuCount++;
+      // 1. Right-Click Context Flip (Desktop)
+      window.addEventListener('contextmenu', (e) => {
+        // Prevent default browser menu only when outside modal
+        if (!pdfModal.classList.contains('active')) {
+          e.preventDefault();
+          flipCard();
         }
       });
 
-      document.getElementById('vanshCount').textContent = `${vanshCount} FILES`;
-      document.getElementById('priyanshuCount').textContent = `${priyanshuCount} FILES`;
-    }
+      // 2. 360° Mirror-Like Mouse Follow Rotation (Desktop)
+      window.addEventListener('mousemove', (e) => {
+        const { innerWidth, innerHeight } = window;
+        const normX = (e.clientX / innerWidth) - 0.5; // -0.5 to 0.5
+        const normY = (e.clientY / innerHeight) - 0.5; // -0.5 to 0.5
 
-    function deleteFile(event, index) {
-      event.stopPropagation();
-      fileStore.splice(index, 1);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(fileStore));
-      renderDynamicFiles();
-      showToast("File removed from local repository");
-    }
+        // Smooth spatial tilt angles
+        targetRotX = -normY * 28;
+        targetRotY = normX * 36;
 
-    /* Modal Handlers */
-    const modal = document.getElementById('uploadModal');
-    let stagedFileBlobUrl = null;
+        // Move dynamic ambient spotlight
+        ambientGlow.style.left = `${e.clientX}px`;
+        ambientGlow.style.top = `${e.clientY}px`;
+      });
 
-    function openUploadModal() {
-      modal.classList.add('open');
-      playAudioBlip(700, 0.08);
-    }
+      // Smooth Animation Loop using Lerp for fluidity
+      const animateCard = () => {
+        currentRotX += (targetRotX - currentRotX) * 0.08;
+        currentRotY += (targetRotY - currentRotY) * 0.08;
 
-    function closeUploadModal() {
-      modal.classList.remove('open');
-      stagedFileBlobUrl = null;
-    }
+        cardWrapper.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+        requestAnimationFrame(animateCard);
+      };
+      animateCard();
 
-    function closeUploadOnBackdrop(e) {
-      if (e.target === modal) closeUploadModal();
-    }
+      // Reset card tilt when cursor leaves viewport
+      document.addEventListener('mouseleave', () => {
+        targetRotX = 0;
+        targetRotY = 0;
+      });
 
-    function handleFileSelection(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      // 3. Touch Swipe Flip (Mobile & Tablet / iPad)
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEndX = 0;
+      let touchEndY = 0;
 
-      document.getElementById('uploadName').value = file.name;
-      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-      document.getElementById('uploadDesc').value = `${sizeMb} MB • Ready to open`;
+      cardWrapper.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchEndX = touch.clientX;
+        touchEndY = touch.clientY;
+      }, { passive: true });
 
-      // Create browser-accessible Object URL
-      stagedFileBlobUrl = URL.createObjectURL(file);
-      showToast(`Selected: ${file.name}`);
-    }
+      cardWrapper.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        touchEndX = touch.clientX;
+        touchEndY = touch.clientY;
 
-    function handleManualUpload(e) {
-      e.preventDefault();
-      const owner = document.getElementById('uploadOwner').value;
-      const name = document.getElementById('uploadName').value.trim();
-      const desc = document.getElementById('uploadDesc').value.trim();
+        // Subtle touch tilt reaction
+        const deltaX = (touch.clientX / window.innerWidth) - 0.5;
+        const deltaY = (touch.clientY / window.innerHeight) - 0.5;
+        targetRotX = -deltaY * 20;
+        targetRotY = deltaX * 25;
+      }, { passive: true });
 
-      const ext = name.split('.').pop().toUpperCase();
-      let badge = ext.slice(0, 3);
-      let badgeClass = 'badge-doc';
+      cardWrapper.addEventListener('touchend', () => {
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
 
-      if (['PDF'].includes(ext)) { badge = 'PDF'; badgeClass = 'badge-pdf'; }
-      else if (['ZIP', 'RAR', 'TAR', '7Z'].includes(ext)) { badge = 'ZIP'; badgeClass = 'badge-zip'; }
-      else if (['DOC', 'DOCX'].includes(ext)) { badge = 'DOC'; badgeClass = 'badge-doc'; }
+        // If horizontal swipe distance > 45px and dominant over vertical
+        if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)) {
+          flipCard();
+        }
 
-      const newEntry = {
-        name,
-        desc,
-        owner,
-        badge,
-        badgeClass,
-        url: stagedFileBlobUrl || name
+        // Return tilt smoothly to center
+        targetRotX = 0;
+        targetRotY = 0;
+      });
+
+      // Click on card flipper also provides intuitive flip
+      cardWrapper.addEventListener('click', (e) => {
+        // Only flip if not dragging significantly
+        const diffX = Math.abs(touchEndX - touchStartX);
+        if (diffX < 15) {
+          flipCard();
+        }
+      });
+
+      // 4. Modal PDF Viewer Management
+      const openModal = () => {
+        if (pdfFrame.getAttribute('src') === 'about:blank') {
+          // Point directly to document.pdf committed in the root repository
+          pdfFrame.setAttribute('src', 'document.pdf');
+        }
+        pdfModal.classList.add('active');
+        pdfModal.setAttribute('aria-hidden', 'false');
+        filesBtn.setAttribute('aria-expanded', 'true');
       };
 
-      fileStore.unshift(newEntry);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(fileStore));
-      renderDynamicFiles();
-      closeUploadModal();
-      showToast(`Added ${name} to repository!`);
-    }
+      const closeModal = () => {
+        pdfModal.classList.remove('active');
+        pdfModal.setAttribute('aria-hidden', 'true');
+        filesBtn.setAttribute('aria-expanded', 'false');
+      };
 
-    /* Open/View File in new tab */
-    function openFileViewer(name, url, ext, size) {
-      playAudioBlip(800, 0.05);
-      if (url && url !== '#') {
-        window.open(url, '_blank');
-      } else {
-        showToast(`Document: ${name} (${size})`);
-      }
-    }
+      filesBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModal();
+      });
 
-    /* Clipboard Copy */
-    const toast = document.getElementById('toastNotice');
-    let toastTimer = null;
+      closeModalBtn.addEventListener('click', closeModal);
 
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add('show');
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
-    }
+      // Close modal on backdrop click
+      pdfModal.addEventListener('click', (e) => {
+        if (e.target === pdfModal) {
+          closeModal();
+        }
+      });
 
-    function copyLink(e, link) {
-      e.stopPropagation();
-      const fullUrl = link.startsWith('http') || link.startsWith('blob:')
-        ? link
-        : (window.location.origin + window.location.pathname.replace('index.html', '') + link);
-
-      const temp = document.createElement('input');
-      temp.value = fullUrl;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand('copy');
-      document.body.removeChild(temp);
-      showToast("Direct file link copied!");
-    }
-
-    // Initialize on load
-    window.onload = function() {
-      initRepository();
-    };
+      // Keyboard accessibility (Escape key closes modal)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+    });
   </script>
 </body>
 </html>
