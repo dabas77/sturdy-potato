@@ -46,7 +46,6 @@
       position: relative;
     }
 
-    /* Starry Background Canvas */
     #spaceCanvas {
       position: fixed;
       top: 0;
@@ -57,7 +56,6 @@
       z-index: 1;
     }
 
-    /* Shooting Star Container (Top-Right Origin) */
     .shooting-star {
       position: fixed;
       top: 0;
@@ -91,13 +89,13 @@
       }
     }
 
-    /* Secret Invisible Trigger Button (Top-Right Symmetrical Placement) */
+    /* Secret Invisible Trigger Button (Symmetrical Top-Right Placement) */
     .secret-trigger-btn {
       position: fixed;
       top: calc(34px + env(safe-area-inset-top));
       right: calc(34px + env(safe-area-inset-right));
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       background: transparent;
       border: none;
       outline: none;
@@ -137,7 +135,7 @@
       cursor: grabbing;
     }
 
-    /* Curvy 3D Chamfer Slices */
+    /* Smooth Curvy 3D Chamfer Thickness Layers */
     .card-core {
       position: absolute;
       inset: 0;
@@ -188,7 +186,6 @@
       overflow: hidden;
     }
 
-    /* Sheen Layer */
     .sheen {
       position: absolute;
       inset: -100%;
@@ -203,7 +200,7 @@
       pointer-events: none;
     }
 
-    /* Front: Vansh Dabas */
+    /* Front Profile: Vansh Dabas */
     .face-front {
       border: 1px solid var(--gold-border);
       box-shadow: 
@@ -214,7 +211,7 @@
       -webkit-transform: rotateY(0deg) translateZ(4px);
     }
 
-    /* Back: Priyanshu Sehrawat */
+    /* Back Profile: Priyanshu Sehrawat */
     .face-back {
       border: 1px solid var(--silver-border);
       box-shadow: 
@@ -302,7 +299,7 @@
       background: var(--accent-silver);
     }
 
-    /* Floating Files Button (Bottom-Right) */
+    /* Floating Files Capsule Button */
     .files-btn {
       position: fixed;
       bottom: calc(34px + env(safe-area-inset-bottom));
@@ -346,7 +343,7 @@
       stroke-linejoin: round;
     }
 
-    /* Modals & Backdrop */
+    /* Glass Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -422,7 +419,6 @@
       color: #ffffff;
     }
 
-    /* Files List Items */
     .file-list {
       display: flex;
       flex-direction: column;
@@ -483,7 +479,6 @@
       color: var(--accent-gold);
     }
 
-    /* Secret Passcode Box */
     .passcode-box {
       display: flex;
       flex-direction: column;
@@ -537,7 +532,7 @@
       display: none;
     }
 
-    /* Secret In-Site Video Theatre */
+    /* Secret Theatre Overlay */
     .video-theatre {
       position: fixed;
       inset: 0;
@@ -606,6 +601,7 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 30px rgba(220, 185, 125, 0.15);
       background: #000000;
+      position: relative;
     }
 
     .video-wrapper video {
@@ -614,27 +610,26 @@
       max-height: 70vh;
       display: block;
       outline: none;
+      background: #000000;
     }
   </style>
 </head>
 <body>
 
-  <!-- Starry Background Canvas -->
   <canvas id="spaceCanvas"></canvas>
   <div class="shooting-star" id="shootingStar"></div>
 
-  <!-- Symmetrical Invisible Trigger (Top-Right) -->
+  <!-- Hidden Top-Right Trigger -->
   <button class="secret-trigger-btn" id="secretTriggerBtn" aria-label="Trigger"></button>
 
   <!-- 3D Card Scene -->
   <div class="scene" id="scene">
     <div class="card" id="card">
-      <!-- Smooth Curvy 3D Chamfer Depth Slices -->
       <div class="card-chamfer-back"></div>
       <div class="card-core"></div>
       <div class="card-chamfer-front"></div>
 
-      <!-- Front: Vansh Dabas -->
+      <!-- Front Profile -->
       <div class="card-face face-front">
         <div class="sheen" id="sheenFront"></div>
         <h1 class="name">Vansh Dabas</h1>
@@ -648,7 +643,7 @@
         </ul>
       </div>
 
-      <!-- Back: Priyanshu Sehrawat -->
+      <!-- Back Profile -->
       <div class="card-face face-back">
         <div class="sheen" id="sheenBack"></div>
         <h1 class="name">Priyanshu Sehrawat</h1>
@@ -670,7 +665,7 @@
     Files
   </button>
 
-  <!-- In-Site Files List Modal -->
+  <!-- Files Drawer Modal -->
   <div class="modal-backdrop" id="modalBackdrop">
     <div class="modal-panel" id="modalPanel">
       <div class="modal-header">
@@ -699,7 +694,7 @@
     </div>
   </div>
 
-  <!-- Secret Passcode Modal -->
+  <!-- Passcode 007 Access Modal -->
   <div class="modal-backdrop" id="passcodeBackdrop">
     <div class="modal-panel" id="passcodePanel">
       <div class="modal-header">
@@ -722,12 +717,10 @@
   <div class="video-theatre" id="videoTheatre">
     <div class="theatre-controls">
       <div class="theatre-title">Secret Archive Playback</div>
-      <button class="theatre-close-btn" id="theatreCloseBtn">
-        Close ✕
-      </button>
+      <button class="theatre-close-btn" id="theatreCloseBtn">Close ✕</button>
     </div>
     <div class="video-wrapper">
-      <video id="secretVideo" playsinline controls preload="metadata">
+      <video id="secretVideo" playsinline webkit-playsinline controls preload="auto">
         <source src="secret.mp4" type="video/mp4">
       </video>
     </div>
@@ -735,7 +728,6 @@
 
   <script>
     (function () {
-      // Audio Synthesizer
       let audioCtx = null;
       function getAudioContext() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -777,7 +769,7 @@
         } catch (_) {}
       }
 
-      // Starfield Canvas with Depth Parallax
+      // Parallax Twinkling Stars
       const canvas = document.getElementById('spaceCanvas');
       const ctx = canvas.getContext('2d');
       let stars = [];
@@ -805,7 +797,7 @@
         }
       }
 
-      // Shooting Star (Top-Right Origin, 5s delay, 30s interval)
+      // Top-Right Meteor Trajectory
       const shootingStar = document.getElementById('shootingStar');
       function triggerMeteor() {
         const startX = window.innerWidth - (Math.random() * (window.innerWidth * 0.35) + 30);
@@ -822,7 +814,7 @@
         setInterval(triggerMeteor, 30000);
       }, 5000);
 
-      // Card 3D Physics
+      // Card Physics & Interaction
       const card = document.getElementById('card');
       const scene = document.getElementById('scene');
       const sheenFront = document.getElementById('sheenFront');
@@ -897,7 +889,6 @@
       resizeCanvas();
       requestAnimationFrame(animationLoop);
 
-      // Card Gestures (100% Free-Angle Freeze)
       scene.addEventListener('pointerdown', (e) => {
         if (e.button === 2) return;
         isDragging = true;
@@ -956,7 +947,7 @@
         targetRotX = 0;
       });
 
-      // Files Drawer Controls
+      // Files Drawer Actions
       const filesBtn = document.getElementById('filesBtn');
       const modalBackdrop = document.getElementById('modalBackdrop');
       const modalPanel = document.getElementById('modalPanel');
@@ -976,7 +967,7 @@
         if (!modalPanel.contains(e.target)) modalBackdrop.classList.remove('open');
       });
 
-      // Secret Trigger & Passcode Logic
+      // Secret Code 007 & Universal Video Playback
       const secretTriggerBtn = document.getElementById('secretTriggerBtn');
       const passcodeBackdrop = document.getElementById('passcodeBackdrop');
       const passcodePanel = document.getElementById('passcodePanel');
@@ -1011,10 +1002,23 @@
           playClickSound();
           passcodeBackdrop.classList.remove('open');
           
-          // Open In-Site Video Theatre
           videoTheatre.classList.add('open');
+          
+          // Re-load ensure cache freshness across platforms
+          if (!secretVideo.src.includes('secret.mp4')) {
+            secretVideo.src = 'secret.mp4';
+          }
           secretVideo.currentTime = 0;
-          secretVideo.play().catch(() => {});
+          secretVideo.load();
+
+          const playPromise = secretVideo.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Browser policy fallback: play muted first if sound auto-start is blocked
+              secretVideo.muted = true;
+              secretVideo.play().catch(() => {});
+            });
+          }
         } else {
           errorMsg.style.display = 'block';
           passcodeInput.value = '';
@@ -1027,7 +1031,7 @@
         if (e.key === 'Enter') verifyCode();
       });
 
-      // Exit Secret Video & Return to Normal Page
+      // Exit Theatre Cleanly
       function closeVideoTheatre() {
         playClickSound();
         secretVideo.pause();
